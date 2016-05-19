@@ -1,0 +1,20 @@
+{
+    "name": "jamset/publisher-pulsar",
+    "description": "ReactPHP based module allowing to coordinate set of independent processes",
+    "require": {
+        "jamset/react_fractal_basic": "dev-master"
+    },
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Jam Set",
+            "email": "jamset@joinger.org"
+        }
+    ],
+    "minimum-stability": "dev",
+    "autoload": {
+        "psr-4": {
+            "React\\PublisherPulsar\\": "src/"
+        }
+    }
+}
