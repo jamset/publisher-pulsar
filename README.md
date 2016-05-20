@@ -2,9 +2,39 @@
 ReactPHP based module allowing to coordinate set of independent processes. I.e. to not exceed API RPS limits 
 (i.e. Google Analytics)
 
+###
+Install
+
 `composer require jamset/publisher-pulsar`
 
+###
+Schema
+
 ![PublisherPulsar schema](https://github.com/jamset/publisher-pulsar/raw/master/images/publisher-pulsar-schema.jpg)
+
+###
+Description
+
+The idea that PublisherPulsar is the daemon, that allow to make some action simultaneously (i.e. connection to API) 
+for certain number of processes ('subscribers'). 
+
+I.e. limit for GA is 10 request per second, and so you can include in code of such processes connection to Pulsar, 
+set in Pulsar settings limit for 10 subscribers per iteration, set iteration size 1 second, and start daemon and processes. 
+
+All processes beginning after it will be connect to special stack (ReplyStack, based on ZMQ and ReactPHP, part 
+of PublisherPulsar), which will notify Pulsar that subscribers are ready to make an action.
+
+After it Pulsar send allowing message to it, that allow them to continue their execution, i.e. - make a request to API.
+
+And so the limitation of an API wouldn't be exceeded.
+
+And of course this module can be used for any purposes that need some simultaneous activity of processes.
+
+###
+Example
+
+#
+Daemon settings
 
 Example for Laravel could look like this one:
 
@@ -69,3 +99,5 @@ And subsidiary ReplyStack daemon command's class have to contain
 
 (and both of them have to be named in Kernel)
 
+#
+Including in process
