@@ -23,7 +23,7 @@ make a request to API. And so the limitation of API wouldn't be exceeded.
 
 And of course this module can be used for any purposes that need some simultaneous activity of processes.
 
-P.s. if number of processes less than needed to make publishing (i.e. work only 5 processes in some period, or even when 
+- If number of processes less than needed to make publishing (i.e. work only 5 processes in some period, or even when 
 no process is running), Pulsar's module called PerformerImitator will imitate activity of missing processes and Pulsar 
 will work as it should, without any stops. 
 
@@ -103,4 +103,66 @@ And subsidiary ReplyStack daemon command's class have to contain
 
 ###Including in process
 
-##Logs
+In process (in service) just above request to API (or other needed action) you should call this methods of 
+React\PulbisherPulsar\Performer methods
+
+```php
+
+$this->zmqPerformer->requestForActionPermission();
+$this->zmqPerformer->waitAllowingSubscriptionMessage();
+
+and when action will be done depeneds on 
+
+```
+
+and when action will be done depends on its result you can
+
+$this->zmqPerformer->pushActionResultInfoWithoutPulsarCorrectionBehavior();
+
+that will not change Pulsar behaviour or you can set a sign of errors and set into resultDto when it occurs. 
+
+For example:
+
+```php
+
+if (strpos($e->getMessage(), GaErrorResponsesConstants::USER_RATE_LIMIT_EXCEEDED) !== false) {
+
+    $actionResultWithError = new ActionResultingPushDto();
+
+    $actionResultWithError->setActionCompleteCorrectly(false);
+    $actionResultWithError->setSlowDown(true);
+
+    $actionResultWithError->setErrorMessage($e->getMessage());
+    $actionResultWithError->setErrorReason(GaErrorResponsesConstants::USER_RATE_LIMIT_EXCEEDED);
+
+    $this->zmqPerformer->pushActionResultInfo($actionResultWithError);
+
+    Log::warning("PUSH 403 with " . GaErrorResponsesConstants::USER_RATE_LIMIT_EXCEEDED
+        . " error was made.");
+
+} elseif (strpos($e->getMessage(), GaErrorResponsesConstants::DAILY_LIMIT_EXCEEDED) !== false) {
+
+    $actionResultWithError = new ActionResultingPushDto();
+
+    $actionResultWithError->setActionCompleteCorrectly(false);
+
+    $sleepForPeriod = new ErrorSleepForPeriod();
+    $sleepForPeriod->setSleepPeriod((60 * 60 * 1000000));
+    $actionResultWithError->setSleepForPeriod($sleepForPeriod);
+
+    $actionResultWithError->setErrorMessage($e->getMessage());
+    $actionResultWithError->setErrorReason(GaErrorResponsesConstants::DAILY_LIMIT_EXCEEDED);
+
+    $this->zmqPerformer->pushActionResultInfo($actionResultWithError);
+
+    Log::warning("PUSH 403 with " . GaErrorResponsesConstants::DAILY_LIMIT_EXCEEDED
+        . " error was made.");
+
+} else {
+
+    $this->zmqPerformer->pushActionResultInfoWithoutPulsarCorrectionBehavior();
+
+}
+
+
+```
