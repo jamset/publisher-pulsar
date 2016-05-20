@@ -1,6 +1,6 @@
 # Publisher Pulsar
-ReactPHP based module allowing to coordinate set of independent processes. I.e. to not exceed API RPS limits 
-(i.e. Google Analytics)
+ReactPHP and ZMQ based module allowing to coordinate set of independent processes. I.e. to not exceed API RPS limits 
+(i.e. Google Analytics 10 RPS)
 
 ##Install
 
@@ -19,11 +19,11 @@ I.e. limit for GA is 10 request per second, and so you can include in code of su
 set in Pulsar settings limit for 10 subscribers per iteration, set iteration size 1 second, and start daemon and processes. 
 
 All processes beginning after it will be connect to special stack (ReplyStack, based on ZMQ and ReactPHP, part 
-of PublisherPulsar), which will notify Pulsar that subscribers are ready to make an action.
+of PublisherPulsar), which will notify Pulsar that subscribers are ready to make an action when all needed number of processes
+will be active (executed and paused on point that need Pulsar permission to execute further).
 
-After it Pulsar send allowing message to it, that allow them to continue their execution, i.e. - make a request to API.
-
-And so the limitation of an API wouldn't be exceeded.
+After it Pulsar send allowing message to processes (subscribers), that allow them to continue their execution, i.e. 
+- make a request to API. And so the limitation of API wouldn't be exceeded.
 
 And of course this module can be used for any purposes that need some simultaneous activity of processes.
 
@@ -92,6 +92,6 @@ And subsidiary ReplyStack daemon command's class have to contain
 
 ```
 
-(and both of them have to be named in Kernel)
+(and both of them have to be named in App\Console\Kernel file)
 
 ###Including in process
