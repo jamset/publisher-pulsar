@@ -111,15 +111,10 @@ React\PulbisherPulsar\Performer methods
 $this->zmqPerformer->requestForActionPermission();
 $this->zmqPerformer->waitAllowingSubscriptionMessage();
 
-and when action will be done depeneds on 
-
 ```
 
-and when action will be done depends on its result you can
-
-$this->zmqPerformer->pushActionResultInfoWithoutPulsarCorrectionBehavior();
-
-that will not change Pulsar behaviour or you can set a sign of errors and set into resultDto when it occurs. 
+and when action will be done depends on its result you have to call method that push info to Pulsar with information 
+about status of execution: does it have error that assume to slow down or pause Pulsar work or not.
 
 For example:
 
