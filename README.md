@@ -23,9 +23,9 @@ make a request to API. And so the limitation of API wouldn't be exceeded.
 
 And of course this module can be used for any purposes that need some simultaneous activity of processes.
 
-P.s. if number of processes less than needed to make publishing (i.e. work only 5 processes in some period), Pulsar's 
-module called PerformerImitator will imitate activity of missing processes and Pulsar will work as it should, without
-any stops.
+P.s. if number of processes less than needed to make publishing (i.e. work only 5 processes in some period, or even when 
+no process is running), Pulsar's module called PerformerImitator will imitate activity of missing processes and Pulsar 
+will work as it should, without any stops. 
 
 ##Schema
 
@@ -102,3 +102,5 @@ And subsidiary ReplyStack daemon command's class have to contain
 (and both of them have to be named in App\Console\Kernel file)
 
 ###Including in process
+
+##Logs
