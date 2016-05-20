@@ -1,14 +1,10 @@
 # Publisher Pulsar
 ReactPHP and ZMQ based module allowing to coordinate set of independent processes. I.e. to not exceed API RPS limits 
-(i.e. Google Analytics 10 RPS)
+(i.e. Google Analytics 10 RPS for November 2015)
 
 ##Install
 
 `composer require jamset/publisher-pulsar`
-
-##Schema
-
-![PublisherPulsar schema](https://github.com/jamset/publisher-pulsar/raw/master/images/publisher-pulsar-schema.jpg)
 
 ##Description
 
@@ -26,6 +22,13 @@ After it Pulsar send allowing message to processes (subscribers), that allow the
 - make a request to API. And so the limitation of API wouldn't be exceeded.
 
 And of course this module can be used for any purposes that need some simultaneous activity of processes.
+
+##Schema
+
+On the schema described structure and meaning of commands between elements of module
+
+![PublisherPulsar schema](https://github.com/jamset/publisher-pulsar/raw/master/images/publisher-pulsar-schema.jpg)
+
 
 ##Example
 
