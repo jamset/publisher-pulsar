@@ -19,13 +19,13 @@ of PublisherPulsar), which will notify Pulsar that subscribers are ready to make
 will be active (executed and paused on point that need Pulsar permission to execute further).
 
 After it Pulsar send allowing message to processes (subscribers), that allow them to continue their execution, i.e. 
-- make a request to API. And so the limitation of API wouldn't be exceeded.
+make a request to API. And so the limitation of API wouldn't be exceeded.
 
 And of course this module can be used for any purposes that need some simultaneous activity of processes.
 
 ##Schema
 
-On the schema described structure and meaning of commands between elements of module
+On the schema described structure and meaning of commands between elements of the module
 
 ![PublisherPulsar schema](https://github.com/jamset/publisher-pulsar/raw/master/images/publisher-pulsar-schema.jpg)
 
