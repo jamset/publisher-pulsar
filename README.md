@@ -26,7 +26,6 @@ Example for Laravel could look like this one:
         $publisherPulsarDto->setReplyStackCommandName('php artisan react:pulsar-reply-stack');
         $publisherPulsarDto->setPerformerContainerActionMaxExecutionTime(7);
 
-        //TODO: and if Logger wasn't set?
         $publisherPulsarDto->setLogger(\Log::getMonolog());
         $publisherPulsarDto->setMaxWaitReplyStackResult(7);
 
@@ -48,4 +47,25 @@ Example for Laravel could look like this one:
     }
 
 ```
+
+And subsidiary ReplyStack daemon command's class have to contain
+
+```php
+
+    /**
+     * Execute the console command.
+     *
+     * @return mixed
+     */
+    public function fire()
+    {
+        $replyStack = new  \React\PublisherPulsar\ReplyStack();
+        $replyStack->startCommunication();
+
+        return null;
+    }
+
+```
+
+(and both of them have to be named in Kernel)
 
