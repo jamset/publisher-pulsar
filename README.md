@@ -36,7 +36,7 @@ processes. And when error is
  removed Pulsar start gradually return to normal state.
  
  It very useful when only part of processes that work with API is connected to Pulsar, and so it works flexibly, 
- adapting to the situation
+ adapting to the situation.
 
 - If incoming error shows that Pulsar have to be stopped for some period it detect such signal and make usleep for the 
 specified period
