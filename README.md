@@ -23,9 +23,21 @@ make a request to API. And so the limitation of API wouldn't be exceeded.
 
 And of course this module can be used for any purposes that need some simultaneous activity of processes.
 
+###Features:
+
 - If number of processes less than needed to make publishing (i.e. work only 5 processes in some period, or even when 
 no process is running), Pulsar's module called PerformerImitator will imitate activity of missing processes and Pulsar 
 will work as it should, without any stops. 
+
+- If error occur Pulsar can slow down - make usleep for certain growing period (could be set in Dto on step of daemon init),
+ decrease number of subscribers, to remove the error messages at incoming resulting Dto from processes. And when error is
+ removed Pulsar start gradually return to normal state.
+ 
+ It very useful when only part of processes that work with API is connected to Pulsar, and so it works flexibly, 
+ adapting to the situation
+
+- If incoming error shows that Pulsar have to be stopped for some period it detect such signal and make usleep for the 
+specified period
 
 ##Schema
 
@@ -132,9 +144,6 @@ if (strpos($e->getMessage(), GaErrorResponsesConstants::USER_RATE_LIMIT_EXCEEDED
 
     $this->zmqPerformer->pushActionResultInfo($actionResultWithError);
 
-    Log::warning("PUSH 403 with " . GaErrorResponsesConstants::USER_RATE_LIMIT_EXCEEDED
-        . " error was made.");
-
 } elseif (strpos($e->getMessage(), GaErrorResponsesConstants::DAILY_LIMIT_EXCEEDED) !== false) {
 
     $actionResultWithError = new ActionResultingPushDto();
@@ -149,9 +158,6 @@ if (strpos($e->getMessage(), GaErrorResponsesConstants::USER_RATE_LIMIT_EXCEEDED
     $actionResultWithError->setErrorReason(GaErrorResponsesConstants::DAILY_LIMIT_EXCEEDED);
 
     $this->zmqPerformer->pushActionResultInfo($actionResultWithError);
-
-    Log::warning("PUSH 403 with " . GaErrorResponsesConstants::DAILY_LIMIT_EXCEEDED
-        . " error was made.");
 
 } else {
 
