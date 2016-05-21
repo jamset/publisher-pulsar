@@ -29,8 +29,10 @@ And of course this module can be used for any purposes that need some simultaneo
 no process is running), Pulsar's module called PerformerImitator will imitate activity of missing processes and Pulsar 
 will work as it should, without any stops. 
 
-- If error occur Pulsar can slow down - make usleep for certain growing period (could be set in Dto on step of daemon init),
- decrease number of subscribers, to remove the error messages at incoming resulting Dto from processes. And when error is
+- If error occur Pulsar can decrease number of subscribers or slow down - make usleep for certain growing period 
+(the default value can be changed during 
+initialization of the daemon in PublisherPulsarDto object), to remove the error messages at incoming resulting Dto from 
+processes. And when error is
  removed Pulsar start gradually return to normal state.
  
  It very useful when only part of processes that work with API is connected to Pulsar, and so it works flexibly, 
