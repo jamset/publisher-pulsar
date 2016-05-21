@@ -693,7 +693,8 @@ class Pulsar extends BaseReactControl implements ReactManager
     {
         switch (true):
             case(is_null($pushDto->isSlowDown()) === false):
-                $this->logger->info("Start SLOW DOWN Pulsar" . $this->loggerPostfix);
+                $this->logger->info("Start SLOW DOWN Pulsar | Error reason: " . $pushDto->getErrorReason() .
+                    " | Error message: " . $pushDto->getErrorMessage() . $this->loggerPostfix);
                 $this->slowDown();
                 break;
             case(is_null($pushDto->getSleepForPeriod()) === false):
