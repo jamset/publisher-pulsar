@@ -8,7 +8,7 @@ ReactPHP and ZMQ based module allowing to coordinate set of independent processe
 
 ##Description
 
-The idea that PublisherPulsar is the daemon, that allow to make some action simultaneously (i.e. connection to API) 
+The idea that PublisherPulsar is the daemon, which allow to make some action simultaneously (i.e. connection to API) 
 for certain number of processes ('subscribers'). 
 
 I.e. limit for Google Analytics is 10 request per second, and so you can include in code of such processes ('services',
@@ -27,9 +27,9 @@ And of course this module can be used for any purposes that need some simultaneo
 
 - If number of processes less than needed to make publishing (i.e. work only 5 processes in some period, or even when 
 no process is running), Pulsar's module called PerformerImitator will imitate activity of missing processes and Pulsar 
-will work as it should, without any stops. 
+will work as it should, without any long stops. 
 
-- If error occur Pulsar can decrease number of subscribers or slow down - make usleep for certain growing period 
+- If error occur Pulsar can decrease number of subscribers or slow down - make usleep() for certain growing period 
 (the default value can be changed during 
 initialization of the daemon in PublisherPulsarDto object), to remove the error messages at incoming resulting Dto from 
 processes. And when error is
@@ -38,7 +38,7 @@ processes. And when error is
  It very useful when only part of processes that work with API is connected to Pulsar, and so it works flexibly, 
  adapting to the situation.
 
-- If incoming error shows that Pulsar have to be stopped for some period it detect such signal and make usleep for the 
+- If incoming error shows that Pulsar have to be stopped definitely for some period, it detect such signal and make usleep() for the 
 specified period
 
 ##Schema
