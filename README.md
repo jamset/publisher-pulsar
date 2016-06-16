@@ -6,7 +6,7 @@ ReactPHP and ZMQ based module allowing to coordinate set of independent processe
 
 `composer require jamset/publisher-pulsar`
 
-Additional needed libs installation guide could be found [here](https://github.com/jamset/gearman-conveyor/blob/master/docs/environment.md)
+Additional needed libs installation guide could be found [here](https://github.com/jamset/gearman-conveyor/blob/master/docs/environment.md). Section "Install PECL" and "Optional".
 
 ##Description
 
