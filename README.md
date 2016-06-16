@@ -6,6 +6,8 @@ ReactPHP and ZMQ based module allowing to coordinate set of independent processe
 
 `composer require jamset/publisher-pulsar`
 
+Additional needed libs installation guide could be found [here](https://github.com/jamset/gearman-conveyor/blob/master/docs/environment.md)
+
 ##Description
 
 The idea that PublisherPulsar is the daemon, which allow to make some action simultaneously (i.e. connection to API) 
