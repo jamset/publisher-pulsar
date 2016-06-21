@@ -190,6 +190,16 @@ class Pulsar extends BaseReactControl implements ReactManager
      */
     protected $maxPerformerImitatorRequests = 20;
 
+    /**For tests purposes
+     * @var int
+     */
+    protected $limitNumbersOfIterations = 0;
+
+    /**Increments by main periodic timer (initPulsar())
+     * @var int
+     */
+    protected $iterationsNumber = 0;
+
     /**
      * @return null
      * @throws PublisherPulsarException
@@ -309,11 +319,13 @@ class Pulsar extends BaseReactControl implements ReactManager
          */
         $this->replyStackProcess->stdout->on(EventsConstants::DATA, function ($data) {
             $this->logger->critical($data);
+            //$this->replyStackProcess->close();
             throw new PublisherPulsarException("Error in STDOUT due to initReplyStackProcess. " . $data);
         });
 
         $this->replyStackProcess->stderr->on(EventsConstants::DATA, function ($data) {
             $this->logger->critical($data);
+            //$this->replyStackProcess->close();
             throw new PublisherPulsarException("Error in STDERR due to initReplyStackProcess. " . $data);
         });
 
@@ -436,6 +448,11 @@ class Pulsar extends BaseReactControl implements ReactManager
     protected function initPulsar()
     {
         $this->loop->addPeriodicTimer($this->publisherPulsarDto->getPulsationIterationPeriod(), function ($timer) {
+
+            $this->iterationsNumber++;
+
+            $this->checkLimitNumbersOfIterations();
+
             if ($this->sleepForPeriod > 0) {
                 $this->logger->notice("Sleep for period: " . $this->sleepForPeriod);
             }
@@ -473,6 +490,22 @@ class Pulsar extends BaseReactControl implements ReactManager
                 $this->logger->debug("Reply stack doesn't return result yet.");
             }
         });
+
+        return null;
+    }
+
+    /**
+     * @return null
+     */
+    protected function checkLimitNumbersOfIterations()
+    {
+        if ($this->limitNumbersOfIterations > 0 && $this->limitNumbersOfIterations < $this->iterationsNumber) {
+
+            $this->logger->debug($this->getPublisherPulsarDto()->getModuleName() . " was stopped because of increasing
+            of iterations number: " . $this->iterationsNumber . " with limit of " . $this->limitNumbersOfIterations . " iterations");
+
+            $this->loop->stop();
+        }
 
         return null;
     }
@@ -546,7 +579,7 @@ class Pulsar extends BaseReactControl implements ReactManager
     {
         $checkResult = false;
 
-        $checkName = "TO HANDLE RESULTING";
+        $checkName = "to handle resultingDto.";
         $this->startLogCheckIsReady($checkName);
         $this->logger->debug("Max wait before handle pushMessages: " . $this->maxWaitBeforeHandlePushMessages);
 
@@ -571,6 +604,7 @@ class Pulsar extends BaseReactControl implements ReactManager
     {
         $this->logger->debug("Pulsar start handle resultingPushMessages.");
         $this->actionResultingContainPerformerError = false;
+
         /**
          * @var ActionResultingPushDto $pushMessage
          */
@@ -672,7 +706,7 @@ class Pulsar extends BaseReactControl implements ReactManager
      */
     protected function startLogCheckIsReady($checkName)
     {
-        $this->logger->debug("START __ CHECK READY $checkName.");
+        $this->logger->debug("Start check if ready $checkName.");
         $this->logger->debug("Should be subscribers number: " . $this->shouldBeSubscribersNumber);
         $this->logger->debug("ConsiderMeAsSubscriber: " . $this->considerMeAsSubscriber);
         $this->logger->debug("I am subscriber: " . $this->iAmSubscriber);
@@ -870,6 +904,47 @@ class Pulsar extends BaseReactControl implements ReactManager
     {
         $this->publisherPulsarDto = $publisherPulsarDto;
     }
+
+    /**
+     * @return array
+     */
+    public function getResultingPushMessages()
+    {
+        return $this->resultingPushMessages;
+    }
+
+    /**
+     * @return int
+     */
+    public function getIAmSubscriber()
+    {
+        return $this->iAmSubscriber;
+    }
+
+    /**
+     * @return int
+     */
+    public function getPerformerImitationRequests()
+    {
+        return $this->performerImitationRequests;
+    }
+
+    /**
+     * @return int
+     */
+    public function getLimitNumbersOfIterations()
+    {
+        return $this->limitNumbersOfIterations;
+    }
+
+    /**
+     * @param int $limitNumbersOfIterations
+     */
+    public function setLimitNumbersOfIterations($limitNumbersOfIterations)
+    {
+        $this->limitNumbersOfIterations = $limitNumbersOfIterations;
+    }
+
 
 
 }
