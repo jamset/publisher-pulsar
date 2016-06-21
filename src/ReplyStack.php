@@ -77,7 +77,7 @@ class ReplyStack extends BaseSubsidiary
                 $initDto->setShutDownArg('warning');
                 $this->initStartMethods($initDto);
 
-                $this->logger->debug("ReplyStack receive initDto from Pulsar.");
+                //$this->logger->debug("ReplyStack receive initDto from Pulsar.");
                 $this->loop->nextTick([$this, 'startStackWork']);
 
             } else {
@@ -113,7 +113,7 @@ class ReplyStack extends BaseSubsidiary
 
         while (true) {
 
-            $this->logger->debug("Start ReplyStack while.");
+            //$this->logger->debug("Start ReplyStack while.");
 
             $this->pulsarRequestSocket->send(serialize($getTaskDto));
 
@@ -122,34 +122,33 @@ class ReplyStack extends BaseSubsidiary
              */
             $pulsarToReplyStackReplyDto = unserialize($this->pulsarRequestSocket->recv());
 
-            $this->logger->debug("REPLY STACK asked to prepare subscribers: "
-                . $pulsarToReplyStackReplyDto->getSubscribersNumber());
+            //$this->logger->debug("REPLY STACK asked to prepare subscribers: " . $pulsarToReplyStackReplyDto->getSubscribersNumber());
 
             for ($i = 1; $i <= $pulsarToReplyStackReplyDto->getSubscribersNumber(); $i++) {
 
                 $preparingDto = unserialize($this->performersReplySocket->recv());
-                $this->logger->debug("REPLY STACK: receive request $i");
+                //$this->logger->debug("REPLY STACK: receive request $i");
 
                 if ($preparingDto instanceof PreparingRequestDto) {
                     $considerMeAsSubscriber++;
-                    $this->logger->debug("REPLY STACK: considerMeAsSubscriber: $considerMeAsSubscriber");
+                    //$this->logger->debug("REPLY STACK: considerMeAsSubscriber: $considerMeAsSubscriber");
                     $this->performersReplySocket->send(serialize($pulsarToReplyStackReplyDto->getDtoToTransfer()));
                 }
             }
 
-            $this->logger->debug("REPLY STACK prepared subscribers: " . $considerMeAsSubscriber);
+            //$this->logger->debug("REPLY STACK prepared subscribers: " . $considerMeAsSubscriber);
 
             $replyStackResult = new ReplyStackToPulsarReturnResultRequestDto();
             $replyStackResult->setConsiderMeAsSubscriber($considerMeAsSubscriber);
 
             $this->pulsarRequestSocket->send(serialize($replyStackResult));
 
-            $this->logger->debug("Wait finishing message from Pulsar.");
+            //$this->logger->debug("Wait finishing message from Pulsar.");
             $this->pulsarRequestSocket->recv();
-            $this->logger->debug("Got finish message from Pulsar.");
+            //$this->logger->debug("Got finish message from Pulsar.");
             $considerMeAsSubscriber = 0;
 
-            $this->logger->debug("Finish ReplyStack while.");
+            //$this->logger->debug("Finish ReplyStack while.");
         }
 
         return null;
