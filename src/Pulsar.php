@@ -393,7 +393,7 @@ class Pulsar extends BaseReactControl implements ReactManager
         });
 
         $this->pullActionInfo->on(EventsConstants::ERROR, function ($error) {
-            $this->logger->debug(LoggingExceptions::getExceptionString($error));
+            $this->logger->error(LoggingExceptions::getExceptionString($error));
         });
 
         return null;
