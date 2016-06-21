@@ -3,10 +3,7 @@
     "description": "ReactPHP based module allowing to coordinate set of independent processes",
     "require": {
       "php": ">=5.5.9",
-      "jamset/react_fractal_basic": "dev-master",
-      "react/react": "^0.4.2",
-      "react/zmq": "*",
-      "jamset/gearman-conveyor": "dev-master"
+      "jamset/react_fractal_basic": "dev-master"
     },
   "require-dev": {
     "phpunit/phpunit": "5.3.*"
