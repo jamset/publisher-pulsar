@@ -76,7 +76,6 @@ Example for Laravel could look like this one:
         $publisherPulsarDto->setReplyStackCommandName('php artisan react:pulsar-reply-stack');
         $publisherPulsarDto->setPerformerContainerActionMaxExecutionTime(7);
 
-        $publisherPulsarDto->setLogger(\Log::getMonolog());
         $publisherPulsarDto->setMaxWaitReplyStackResult(7);
 
         $pulsarSocketsParams = new \React\PublisherPulsar\Inventory\PulsarSocketsParamsDto();

@@ -7,21 +7,18 @@
  */
 namespace React\PublisherPulsar;
 
-use AdjutantHandlers\Objects\Logging;
 use React\FractalBasic\Abstracts\BaseExecutor;
 use React\PublisherPulsar\Interfaces\PerformerZmqSubscriber;
 use React\PublisherPulsar\Inventory\ActionResultingPushDto;
 use React\PublisherPulsar\Inventory\BecomeTheSubscriberReplyDto;
 use React\PublisherPulsar\Inventory\Exceptions\PublisherPulsarException;
 use React\PublisherPulsar\Inventory\Exceptions\PublisherPulsarExceptionsConstants;
-use React\PublisherPulsar\Inventory\PerformerConstants;
 use React\PublisherPulsar\Inventory\PerformerDto;
 use React\PublisherPulsar\Inventory\PerformerEarlyTerminated;
 use React\PublisherPulsar\Inventory\PerformerSocketsParamsDto;
 use React\PublisherPulsar\Inventory\PreparingRequestDto;
 use React\PublisherPulsar\Inventory\PublisherToSubscribersDto;
 use React\PublisherPulsar\Inventory\ReadyToGetSubscriptionMsg;
-use Monolog\Logger;
 
 class Performer extends BaseExecutor implements PerformerZmqSubscriber
 {

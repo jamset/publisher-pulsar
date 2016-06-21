@@ -7,6 +7,7 @@
  */
 namespace React\PublisherPulsar;
 
+use Monolog\Logger;
 use React\FractalBasic\Abstracts\BaseReactControl;
 use React\FractalBasic\Interfaces\ReactManager;
 use React\FractalBasic\Inventory\EventsConstants;
@@ -30,7 +31,6 @@ use React\PublisherPulsar\Inventory\ReadyToGetSubscriptionMsg;
 use React\PublisherPulsar\Inventory\ReplyStackDto;
 use React\PublisherPulsar\Inventory\ReplyStackToPulsarReturnResultRequestDto;
 use React\ChildProcess\Process;
-use React\EventLoop\Factory;
 use React\ZMQ\Context;
 use React\ZMQ\SocketWrapper;
 
@@ -191,6 +191,10 @@ class Pulsar extends BaseReactControl implements ReactManager
      */
     protected $maxPerformerImitatorRequests = 20;
 
+    /**
+     * @return null
+     * @throws PublisherPulsarException
+     */
     public function manage()
     {
         if (!($this->publisherPulsarDto instanceof PublisherPulsarDto)) {
@@ -226,6 +230,10 @@ class Pulsar extends BaseReactControl implements ReactManager
         return null;
     }
 
+    /**
+     * @return null
+     * @throws PublisherPulsarException
+     */
     protected function initResultingPushMessagesWaiting()
     {
         if ($this->publisherPulsarDto->getPerformerContainerActionMaxExecutionTime()) {
@@ -250,6 +258,11 @@ class Pulsar extends BaseReactControl implements ReactManager
         return null;
     }
 
+    /**
+     * @param $arg1
+     * @param $arg2
+     * @return null
+     */
     protected function setMaxWaitBeforeHandlePushMessages($arg1, $arg2)
     {
         $this->maxWaitBeforeHandlePushMessages = $arg1 * $arg2 / 2;
@@ -257,6 +270,9 @@ class Pulsar extends BaseReactControl implements ReactManager
         return null;
     }
 
+    /**
+     * @return null
+     */
     protected function initSockets()
     {
         $this->replyToReplyStack = $this->context->getSocket(\ZMQ::SOCKET_REP);
@@ -271,6 +287,9 @@ class Pulsar extends BaseReactControl implements ReactManager
         return null;
     }
 
+    /**
+     * @return null
+     */
     protected function initReplyStackProcess()
     {
         $this->replyStackProcess = new Process($this->publisherPulsarDto->getReplyStackCommandName());
@@ -362,6 +381,9 @@ class Pulsar extends BaseReactControl implements ReactManager
         return null;
     }
 
+    /**
+     * @return null
+     */
     protected function declarePushMessaging()
     {
         $this->pullActionInfo->on(EventsConstants::MESSAGE, function ($pushDto) {
@@ -378,6 +400,10 @@ class Pulsar extends BaseReactControl implements ReactManager
         return null;
     }
 
+    /**
+     * @param PushDto $pushDto
+     * @return null
+     */
     protected function resolvePushMessage(PushDto $pushDto)
     {
         switch (true) {
@@ -405,6 +431,9 @@ class Pulsar extends BaseReactControl implements ReactManager
         return null;
     }
 
+    /**
+     * @return null
+     */
     protected function initPulsar()
     {
         $this->loop->addPeriodicTimer($this->publisherPulsarDto->getPulsationIterationPeriod(), function ($timer) {
@@ -478,6 +507,9 @@ class Pulsar extends BaseReactControl implements ReactManager
         return $checkResult;
     }
 
+    /**
+     * @return null
+     */
     protected function correctMaxWaitPushMessagingTime()
     {
         $this->setMaxWaitBeforeHandlePushMessages($this->iAmSubscriber, $this->performerContainerActionMaxExecutionTime);
@@ -485,6 +517,9 @@ class Pulsar extends BaseReactControl implements ReactManager
         return null;
     }
 
+    /**
+     * @return null
+     */
     protected function publish()
     {
         $this->logger->debug("Come to publish." . $this->loggerPostfix);
@@ -530,6 +565,9 @@ class Pulsar extends BaseReactControl implements ReactManager
         return $checkResult;
     }
 
+    /**
+     * @return null
+     */
     protected function handleResultingPushMessages()
     {
         $this->logger->debug("Pulsar start handle resultingPushMessages." . $this->loggerPostfix);
@@ -581,6 +619,10 @@ class Pulsar extends BaseReactControl implements ReactManager
         return null;
     }
 
+    /**
+     * @return null
+     * @throws PublisherPulsarException
+     */
     protected function initPerformerImitator()
     {
         $this->logger->debug("Performer imitator start work." . $this->loggerPostfix);
@@ -625,6 +667,10 @@ class Pulsar extends BaseReactControl implements ReactManager
         return null;
     }
 
+    /**
+     * @param $checkName
+     * @return null
+     */
     protected function startLogCheckIsReady($checkName)
     {
         $this->logger->debug("START __ CHECK READY $checkName." . $this->loggerPostfix);
@@ -639,6 +685,10 @@ class Pulsar extends BaseReactControl implements ReactManager
         return null;
     }
 
+    /**
+     * @param $checkName
+     * @return null
+     */
     protected function finishLogCheckIsReady($checkName)
     {
         $this->logger->debug("FINISH CHECK ___ READY $checkName." . $this->loggerPostfix);
@@ -646,6 +696,10 @@ class Pulsar extends BaseReactControl implements ReactManager
         return null;
     }
 
+    /**
+     * @param $argToCompare
+     * @return bool
+     */
     protected function checkWaitTimeExceeded($argToCompare)
     {
         $checkResult = false;
@@ -662,6 +716,11 @@ class Pulsar extends BaseReactControl implements ReactManager
         return $checkResult;
     }
 
+    /**
+     * @param $arg1
+     * @param $arg2
+     * @return bool
+     */
     protected function checkBiggerOrEqual($arg1, $arg2)
     {
         $checkResult = false;
@@ -689,6 +748,10 @@ class Pulsar extends BaseReactControl implements ReactManager
         return $checkResult;
     }
 
+    /**
+     * @param ActionResultingPushDto $pushDto
+     * @return null
+     */
     protected function handleErrorReason(ActionResultingPushDto $pushDto)
     {
         switch (true):
@@ -707,6 +770,9 @@ class Pulsar extends BaseReactControl implements ReactManager
         return null;
     }
 
+    /**
+     * @return null
+     */
     protected function slowDown()
     {
         if ($this->iAmSubscriber > 1) {
@@ -727,6 +793,10 @@ class Pulsar extends BaseReactControl implements ReactManager
         return null;
     }
 
+    /**
+     * @param ActionResultingPushDto $pushDto
+     * @return null
+     */
     protected function sleepForPeriod(ActionResultingPushDto $pushDto)
     {
         $this->logSleepForPeriod($pushDto);
@@ -735,6 +805,10 @@ class Pulsar extends BaseReactControl implements ReactManager
         return null;
     }
 
+    /**
+     * @param ActionResultingPushDto $pushDto
+     * @return null
+     */
     protected function logSleepForPeriod(ActionResultingPushDto $pushDto)
     {
         $this->logger->info("Initiate sleep for period (microseconds): "
@@ -745,6 +819,9 @@ class Pulsar extends BaseReactControl implements ReactManager
         return null;
     }
 
+    /**
+     * @return null
+     */
     protected function finishIteration()
     {
         $this->iAmSubscriber = 0;
@@ -788,7 +865,7 @@ class Pulsar extends BaseReactControl implements ReactManager
     }
 
     /**
-     * @param PublisherPulsarDto $publisherPulsarDto
+     * @param $publisherPulsarDto
      */
     public function setPublisherPulsarDto($publisherPulsarDto)
     {
