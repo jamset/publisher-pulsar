@@ -5,9 +5,7 @@
       "php": ">=5.5.9",
       "jamset/react_fractal_basic": "dev-master",
       "react/react": "^0.4.2",
-      "react/zmq": "^0.3.0",
-      "react/event-loop": "^0.4.2",
-      "react/stream": "^0.4.3",
+      "react/zmq": "*",
       "jamset/gearman-conveyor": "dev-master"
     },
   "require-dev": {
