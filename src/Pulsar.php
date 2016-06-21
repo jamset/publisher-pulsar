@@ -7,7 +7,6 @@
  */
 namespace React\PublisherPulsar;
 
-use Monolog\Logger;
 use React\FractalBasic\Abstracts\BaseReactControl;
 use React\FractalBasic\Interfaces\ReactManager;
 use React\FractalBasic\Inventory\EventsConstants;
@@ -438,7 +437,7 @@ class Pulsar extends BaseReactControl implements ReactManager
     {
         $this->loop->addPeriodicTimer($this->publisherPulsarDto->getPulsationIterationPeriod(), function ($timer) {
             if ($this->sleepForPeriod > 0) {
-                $this->logger->alert("Sleep for period: " . $this->sleepForPeriod . $this->loggerPostfix);
+                $this->logger->notice("Sleep for period: " . $this->sleepForPeriod . $this->loggerPostfix);
             }
 
             if ($this->replyStackReturnResult === true) {
@@ -525,9 +524,9 @@ class Pulsar extends BaseReactControl implements ReactManager
         $this->logger->debug("Come to publish." . $this->loggerPostfix);
 
         if ($this->sleepDueToSlowDown > 0) {
-            $this->logger->alert("Pulsar sleep for microseconds: " . $this->sleepDueToSlowDown . $this->loggerPostfix);
+            $this->logger->notice("Pulsar sleep for microseconds: " . $this->sleepDueToSlowDown . $this->loggerPostfix);
             usleep($this->sleepDueToSlowDown);
-            $this->logger->alert("Wake up before publish." . $this->loggerPostfix);
+            $this->logger->notice("Wake up before publish." . $this->loggerPostfix);
         }
 
         $this->publisher->send(serialize(new PublisherToSubscribersDto()));
@@ -764,7 +763,7 @@ class Pulsar extends BaseReactControl implements ReactManager
                 $this->sleepForPeriod($pushDto);
                 break;
             default:
-                $this->logger->critical("Error wasn't handled because of unknown error reason. | " . serialize($pushDto) . $this->loggerPostfix);
+                $this->logger->error("Error wasn't handled because of unknown error reason. | " . serialize($pushDto) . $this->loggerPostfix);
         endswitch;
 
         return null;
