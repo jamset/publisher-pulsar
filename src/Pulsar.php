@@ -257,14 +257,14 @@ class Pulsar extends BaseReactControl implements ReactManager
         return null;
     }
 
-    /**
+    /**Dynamically change push messages handling time
      * @param $arg1
      * @param $arg2
      * @return null
      */
-    protected function setMaxWaitBeforeHandlePushMessages($arg1, $arg2)
+    protected function setMaxWaitBeforeHandlePushMessages($subscribersNumber, $performerContainerActionMaxExecutionTime)
     {
-        $this->maxWaitBeforeHandlePushMessages = $arg1 * $arg2 / 2;
+        $this->maxWaitBeforeHandlePushMessages = $subscribersNumber * $performerContainerActionMaxExecutionTime / 2;
 
         return null;
     }
@@ -580,9 +580,9 @@ class Pulsar extends BaseReactControl implements ReactManager
 
             if ($pushMessage->getErrorMessage()) {
                 $this->actionResultingContainPerformerError = true;
-                $this->logger->info("ERROR OF EXECUTION EXIST." . $this->loggerPostfix);
-                $this->logger->info("Error reason: " . $pushMessage->getErrorReason() . $this->loggerPostfix);
-                $this->logger->info("Start error handling: " . $pushMessage->getErrorReason() . $this->loggerPostfix);
+                $this->logger->warning("ERROR OF EXECUTION EXIST." . $this->loggerPostfix);
+                $this->logger->warning("Error reason: " . $pushMessage->getErrorReason() . $this->loggerPostfix);
+                $this->logger->warning("Start error handling: " . $pushMessage->getErrorReason() . $this->loggerPostfix);
 
                 $this->handleErrorReason($pushMessage);
 
