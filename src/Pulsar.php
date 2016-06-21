@@ -296,25 +296,25 @@ class Pulsar extends BaseReactControl implements ReactManager
         $this->replyStackProcess->on(EventsConstants::PROCESS_EXIT, function ($exitCode, $termSignal) {
             $this->logger->warning("Reply stack sub-process exit with code: "
                 . serialize($exitCode) . " | and term signal: " . serialize($termSignal)
-                . $this->loggerPostfix
+
             );
         });
 
         $this->replyStackProcess->start($this->loop);
 
-        $this->logger->debug("Init reply stack process." . $this->loggerPostfix);
+        $this->logger->debug("Init reply stack process.");
 
         /**
          * $data is serialized ReplyStackErrorDto
          */
         $this->replyStackProcess->stdout->on(EventsConstants::DATA, function ($data) {
-            $this->logger->critical($data . $this->loggerPostfix);
-            throw new PublisherPulsarException("Error in STDOUT due to initReplyStackProcess. " . $data . $this->loggerPostfix);
+            $this->logger->critical($data);
+            throw new PublisherPulsarException("Error in STDOUT due to initReplyStackProcess. " . $data);
         });
 
         $this->replyStackProcess->stderr->on(EventsConstants::DATA, function ($data) {
-            $this->logger->critical($data . $this->loggerPostfix);
-            throw new PublisherPulsarException("Error in STDERR due to initReplyStackProcess. " . $data . $this->loggerPostfix);
+            $this->logger->critical($data);
+            throw new PublisherPulsarException("Error in STDERR due to initReplyStackProcess. " . $data);
         });
 
         $replyStackDto = new ReplyStackDto();
@@ -365,7 +365,7 @@ class Pulsar extends BaseReactControl implements ReactManager
 
                     $this->considerMeAsSubscriber = $requestDto->getConsiderMeAsSubscriber();
 
-                    $this->logger->debug("PULSAR RECEIVE REPLY STACK RESULT INFO." . $this->loggerPostfix);
+                    $this->logger->debug("PULSAR RECEIVE REPLY STACK RESULT INFO.");
 
                 } else {
                     throw new PublisherPulsarException("Get replyStack result (info about subscribers) twice.");
@@ -374,7 +374,7 @@ class Pulsar extends BaseReactControl implements ReactManager
         });
 
         $this->replyToReplyStack->on(EventsConstants::ERROR, function ($error) {
-            $this->logger->debug(LoggingExceptions::getExceptionString($error) . $this->loggerPostfix);
+            $this->logger->debug(LoggingExceptions::getExceptionString($error));
         });
 
         return null;
@@ -389,11 +389,11 @@ class Pulsar extends BaseReactControl implements ReactManager
 
             $this->resolvePushMessage(unserialize($pushDto));
 
-            $this->logger->debug("Receive push message $pushDto." . $this->loggerPostfix);
+            $this->logger->debug("Receive push message $pushDto.");
         });
 
         $this->pullActionInfo->on(EventsConstants::ERROR, function ($error) {
-            $this->logger->debug(LoggingExceptions::getExceptionString($error) . $this->loggerPostfix);
+            $this->logger->debug(LoggingExceptions::getExceptionString($error));
         });
 
         return null;
@@ -414,16 +414,16 @@ class Pulsar extends BaseReactControl implements ReactManager
                     $this->doNotConsiderMeAsSubscriber++;
                     $this->iAmSubscriber--;
                 }
-                $this->logger->debug("Increase doNotConsiderMeAsSubscriber: " . $this->doNotConsiderMeAsSubscriber . $this->loggerPostfix);
-                $this->logger->debug("Decrease iAmSubscriber: " . $this->iAmSubscriber . $this->loggerPostfix);
+                $this->logger->debug("Increase doNotConsiderMeAsSubscriber: " . $this->doNotConsiderMeAsSubscriber);
+                $this->logger->debug("Decrease iAmSubscriber: " . $this->iAmSubscriber);
                 break;
             case($pushDto instanceof ReadyToGetSubscriptionMsg):
                 $this->iAmSubscriber++;
-                $this->logger->debug("Increase iAmSubscriber: " . $this->iAmSubscriber . $this->loggerPostfix);
+                $this->logger->debug("Increase iAmSubscriber: " . $this->iAmSubscriber);
                 break;
             case($pushDto instanceof ActionResultingPushDto):
                 $this->resultingPushMessages[] = $pushDto;
-                $this->logger->debug("Get action result push dto. Resulting push msg number: " . count($this->resultingPushMessages) . $this->loggerPostfix);
+                $this->logger->debug("Get action result push dto. Resulting push msg number: " . count($this->resultingPushMessages));
                 break;
         }
 
@@ -437,40 +437,40 @@ class Pulsar extends BaseReactControl implements ReactManager
     {
         $this->loop->addPeriodicTimer($this->publisherPulsarDto->getPulsationIterationPeriod(), function ($timer) {
             if ($this->sleepForPeriod > 0) {
-                $this->logger->notice("Sleep for period: " . $this->sleepForPeriod . $this->loggerPostfix);
+                $this->logger->notice("Sleep for period: " . $this->sleepForPeriod);
             }
 
             if ($this->replyStackReturnResult === true) {
-                $this->logger->debug("Check is ready to publish." . $this->loggerPostfix);
+                $this->logger->debug("Check is ready to publish.");
                 if ($this->checkIsReadyToPublish()) {
                     $this->replyStackReturnResult = false;
                     $this->correctMaxWaitPushMessagingTime();
                     $this->publish();
                     $this->publishWasMade = true;
                 } else {
-                    $this->logger->debug("Pulsar is not ready to publish." . $this->loggerPostfix);
+                    $this->logger->debug("Pulsar is not ready to publish.");
                 }
             } elseif ($this->publishWasMade) {
-                $this->logger->debug("Check is ready to handle resulting messages." . $this->loggerPostfix);
+                $this->logger->debug("Check is ready to handle resulting messages.");
                 if ($this->checkIsReadyToHandleResultingPushMessages()) {
                     $this->handleResultingPushMessages();
                 } else {
-                    $this->logger->debug("Pulsar is not ready to handle resultingPushMessages." . $this->loggerPostfix);
+                    $this->logger->debug("Pulsar is not ready to handle resultingPushMessages.");
                 }
             } else {
                 if ($this->performerImitatorActive === false) {
-                    $this->logger->debug("Performer imitator not active. Check if possible to activate." . $this->loggerPostfix);
+                    $this->logger->debug("Performer imitator not active. Check if possible to activate.");
                     if ($this->checkWaitTimeExceeded($this->maxWaitReplyStackResult)) {
                         $this->performerImitatorActive = true;
                         $this->logger->debug("Performer imitator change status to activate. Max waitReplyStackResult " .
                             $this->maxWaitReplyStackResult . " seconds exceeded."
-                            . $this->loggerPostfix);
+                        );
                         $this->initPerformerImitator();
                         $this->logger->debug("Performer imitator change status to not active after work was done."
-                            . $this->loggerPostfix);
+                        );
                     }
                 }
-                $this->logger->debug("Reply stack doesn't return result yet." . $this->loggerPostfix);
+                $this->logger->debug("Reply stack doesn't return result yet.");
             }
         });
 
@@ -492,7 +492,7 @@ class Pulsar extends BaseReactControl implements ReactManager
             $this->shouldBeSubscribersNumber,
             ($this->iAmSubscriber + $this->doNotConsiderMeAsSubscriber + $this->performerImitationRequests))
         ) {
-            $this->logger->debug("All considered subscribers ready." . $this->loggerPostfix);
+            $this->logger->debug("All considered subscribers ready.");
             $checkResult = true;
         } elseif ($this->checkWaitTimeExceeded($this->maxWaitAllSubscribersReadyBeforePublish)) {
             $this->logger->info("FORCE ALLOWING TO PUBLISH.");
@@ -521,12 +521,12 @@ class Pulsar extends BaseReactControl implements ReactManager
      */
     protected function publish()
     {
-        $this->logger->debug("Come to publish." . $this->loggerPostfix);
+        $this->logger->debug("Come to publish.");
 
         if ($this->sleepDueToSlowDown > 0) {
-            $this->logger->notice("Pulsar sleep for microseconds: " . $this->sleepDueToSlowDown . $this->loggerPostfix);
+            $this->logger->notice("Pulsar sleep for microseconds: " . $this->sleepDueToSlowDown);
             usleep($this->sleepDueToSlowDown);
-            $this->logger->notice("Wake up before publish." . $this->loggerPostfix);
+            $this->logger->notice("Wake up before publish.");
         }
 
         $this->publisher->send(serialize(new PublisherToSubscribersDto()));
@@ -534,7 +534,7 @@ class Pulsar extends BaseReactControl implements ReactManager
         //to checkWaitTimeExceeded for handlingResultingPushMessages
         $this->startAwaitBeReadyToAct = microtime(true);
 
-        $this->logger->debug("Publish sent." . $this->loggerPostfix);
+        $this->logger->debug("Publish sent.");
 
         return null;
     }
@@ -548,14 +548,14 @@ class Pulsar extends BaseReactControl implements ReactManager
 
         $checkName = "TO HANDLE RESULTING";
         $this->startLogCheckIsReady($checkName);
-        $this->logger->debug("Max wait before handle pushMessages: " . $this->maxWaitBeforeHandlePushMessages . $this->loggerPostfix);
+        $this->logger->debug("Max wait before handle pushMessages: " . $this->maxWaitBeforeHandlePushMessages);
 
         if ($this->checkBiggerOrEqual(
             (count($this->resultingPushMessages) + $this->performerImitationRequests), $this->iAmSubscriber)
         ) {
             $checkResult = true;
         } elseif ($this->checkWaitTimeExceeded($this->maxWaitBeforeHandlePushMessages)) {
-            $this->logger->info("FORCE ALLOWING HANDLE RESULTING MESSAGES." . $this->loggerPostfix);
+            $this->logger->info("FORCE ALLOWING HANDLE RESULTING MESSAGES.");
             $checkResult = true;
         }
 
@@ -569,24 +569,24 @@ class Pulsar extends BaseReactControl implements ReactManager
      */
     protected function handleResultingPushMessages()
     {
-        $this->logger->debug("Pulsar start handle resultingPushMessages." . $this->loggerPostfix);
+        $this->logger->debug("Pulsar start handle resultingPushMessages.");
         $this->actionResultingContainPerformerError = false;
         /**
          * @var ActionResultingPushDto $pushMessage
          */
         foreach ($this->resultingPushMessages as $key => $pushMessage) {
-            $this->logger->debug("Try to find error." . $this->loggerPostfix);
-            $this->logger->debug("PushMessage contain: " . serialize($pushMessage) . $this->loggerPostfix);
+            $this->logger->debug("Try to find error.");
+            $this->logger->debug("PushMessage contain: " . serialize($pushMessage));
 
             if ($pushMessage->getErrorMessage()) {
                 $this->actionResultingContainPerformerError = true;
-                $this->logger->warning("ERROR OF EXECUTION EXIST." . $this->loggerPostfix);
-                $this->logger->warning("Error reason: " . $pushMessage->getErrorReason() . $this->loggerPostfix);
-                $this->logger->warning("Start error handling: " . $pushMessage->getErrorReason() . $this->loggerPostfix);
+                $this->logger->warning("ERROR OF EXECUTION EXIST.");
+                $this->logger->warning("Error reason: " . $pushMessage->getErrorReason());
+                $this->logger->warning("Start error handling: " . $pushMessage->getErrorReason());
 
                 $this->handleErrorReason($pushMessage);
 
-                $this->logger->info("Finish error handling: " . $pushMessage->getErrorReason() . $this->loggerPostfix);
+                $this->logger->info("Finish error handling: " . $pushMessage->getErrorReason());
                 break;
             }
         }
@@ -596,25 +596,25 @@ class Pulsar extends BaseReactControl implements ReactManager
         if ($this->actionResultingContainPerformerError === false) {
             if ($this->sleepDueToSlowDown !== 0) {
                 $this->sleepDueToSlowDown -= $this->sleepDueToSlowDownChangeStep;
-                $this->logger->info("Pulsar accelerated. Wait interval made smaller: " . $this->sleepDueToSlowDown . $this->loggerPostfix);
+                $this->logger->info("Pulsar accelerated. Wait interval made smaller: " . $this->sleepDueToSlowDown);
 
                 if ($this->sleepDueToSlowDown < 0) {
                     $this->sleepDueToSlowDown = 0;
-                    $this->logger->info("Pulsar accelerated. Wait interval set to zero." . $this->loggerPostfix);
+                    $this->logger->info("Pulsar accelerated. Wait interval set to zero.");
                 }
 
             } else {
                 if ($this->shouldBeSubscribersNumber < $this->publisherPulsarDto->getSubscribersPerIteration()) {
                     $this->shouldBeSubscribersNumber++;
-                    $this->logger->info("Pulsar accelerated. Subscribers number increased: " . $this->shouldBeSubscribersNumber . $this->loggerPostfix);
+                    $this->logger->info("Pulsar accelerated. Subscribers number increased: " . $this->shouldBeSubscribersNumber);
                 } else {
-                    $this->logger->info("Subscribers number is equal to expected." . $this->loggerPostfix);
+                    $this->logger->info("Subscribers number is equal to expected.");
                 }
             }
         }
 
         $this->finishIteration();
-        $this->logger->debug("Push messages resolved." . $this->loggerPostfix);
+        $this->logger->debug("Push messages resolved.");
         return null;
     }
 
@@ -624,7 +624,7 @@ class Pulsar extends BaseReactControl implements ReactManager
      */
     protected function initPerformerImitator()
     {
-        $this->logger->debug("Performer imitator start work." . $this->loggerPostfix);
+        $this->logger->debug("Performer imitator start work.");
 
         if (!$this->performerImitator) {
 
@@ -653,13 +653,13 @@ class Pulsar extends BaseReactControl implements ReactManager
             if ($sendStatus) {
                 $sendStatuses[] = $sendStatus;
                 $this->performerImitationRequests++;
-                $this->logger->debug("Performer imitator send success imitation request: " . $this->performerImitationRequests . $this->loggerPostfix);
+                $this->logger->debug("Performer imitator send success imitation request: " . $this->performerImitationRequests);
             }
 
             $requestsNumber++;
         }
 
-        $this->logger->debug("Performer imitator finish work." . $this->loggerPostfix);
+        $this->logger->debug("Performer imitator finish work.");
         $this->performerImitatorActive = false;
         //$this->performerImitationRequests = 0;
 
@@ -672,14 +672,14 @@ class Pulsar extends BaseReactControl implements ReactManager
      */
     protected function startLogCheckIsReady($checkName)
     {
-        $this->logger->debug("START __ CHECK READY $checkName." . $this->loggerPostfix);
-        $this->logger->debug("Should be subscribers number: " . $this->shouldBeSubscribersNumber . $this->loggerPostfix);
-        $this->logger->debug("ConsiderMeAsSubscriber: " . $this->considerMeAsSubscriber . $this->loggerPostfix);
-        $this->logger->debug("I am subscriber: " . $this->iAmSubscriber . $this->loggerPostfix);
-        $this->logger->debug("Don't consider me as subscriber: " . $this->doNotConsiderMeAsSubscriber . $this->loggerPostfix);
-        $this->logger->debug("Sum (iAm and doNotConsider): " . ($this->iAmSubscriber + $this->doNotConsiderMeAsSubscriber) . $this->loggerPostfix);
-        $this->logger->debug("Resulting push messages:  " . count($this->resultingPushMessages) . $this->loggerPostfix);
-        $this->logger->debug("Performer imitation requests: " . $this->performerImitationRequests . $this->loggerPostfix);
+        $this->logger->debug("START __ CHECK READY $checkName.");
+        $this->logger->debug("Should be subscribers number: " . $this->shouldBeSubscribersNumber);
+        $this->logger->debug("ConsiderMeAsSubscriber: " . $this->considerMeAsSubscriber);
+        $this->logger->debug("I am subscriber: " . $this->iAmSubscriber);
+        $this->logger->debug("Don't consider me as subscriber: " . $this->doNotConsiderMeAsSubscriber);
+        $this->logger->debug("Sum (iAm and doNotConsider): " . ($this->iAmSubscriber + $this->doNotConsiderMeAsSubscriber));
+        $this->logger->debug("Resulting push messages:  " . count($this->resultingPushMessages));
+        $this->logger->debug("Performer imitation requests: " . $this->performerImitationRequests);
 
         return null;
     }
@@ -690,7 +690,7 @@ class Pulsar extends BaseReactControl implements ReactManager
      */
     protected function finishLogCheckIsReady($checkName)
     {
-        $this->logger->debug("FINISH CHECK ___ READY $checkName." . $this->loggerPostfix);
+        $this->logger->debug("FINISH CHECK ___ READY $checkName.");
 
         return null;
     }
@@ -756,14 +756,14 @@ class Pulsar extends BaseReactControl implements ReactManager
         switch (true):
             case(is_null($pushDto->isSlowDown()) === false):
                 $this->logger->info("Start SLOW DOWN Pulsar | Error reason: " . $pushDto->getErrorReason() .
-                    " | Error message: " . $pushDto->getErrorMessage() . $this->loggerPostfix);
+                    " | Error message: " . $pushDto->getErrorMessage());
                 $this->slowDown();
                 break;
             case(is_null($pushDto->getSleepForPeriod()) === false):
                 $this->sleepForPeriod($pushDto);
                 break;
             default:
-                $this->logger->error("Error wasn't handled because of unknown error reason. | " . serialize($pushDto) . $this->loggerPostfix);
+                $this->logger->error("Error wasn't handled because of unknown error reason. | " . serialize($pushDto));
         endswitch;
 
         return null;
@@ -777,15 +777,15 @@ class Pulsar extends BaseReactControl implements ReactManager
         if ($this->iAmSubscriber > 1) {
 
             $this->shouldBeSubscribersNumber--;
-            $this->logger->info("Pulsar slowed. Subscribers number decreased: " . $this->shouldBeSubscribersNumber . $this->loggerPostfix);
+            $this->logger->info("Pulsar slowed. Subscribers number decreased: " . $this->shouldBeSubscribersNumber);
 
         } else {
 
             if ($this->sleepDueToSlowDown < $this->maximumSleepDueToSlowDown) {
                 $this->sleepDueToSlowDown += $this->sleepDueToSlowDownChangeStep;
-                $this->logger->info("Pulsar slowed. Wait interval made bigger: " . $this->sleepDueToSlowDown . $this->loggerPostfix);
+                $this->logger->info("Pulsar slowed. Wait interval made bigger: " . $this->sleepDueToSlowDown);
             } else {
-                $this->logger->info(PublisherPulsarExceptionsConstants::WAITING_INTERVAL_EXCEED_MAXIMUM_VALUE . $this->loggerPostfix);
+                $this->logger->info(PublisherPulsarExceptionsConstants::WAITING_INTERVAL_EXCEED_MAXIMUM_VALUE);
             }
         }
 
@@ -813,7 +813,7 @@ class Pulsar extends BaseReactControl implements ReactManager
         $this->logger->info("Initiate sleep for period (microseconds): "
             . $pushDto->getSleepForPeriod()->getSleepPeriod()
             . " | Error reason: " . $pushDto->getErrorReason()
-            . " | Error message: " . $pushDto->getErrorMessage() . $this->loggerPostfix);
+            . " | Error message: " . $pushDto->getErrorMessage());
 
         return null;
     }
@@ -841,16 +841,16 @@ class Pulsar extends BaseReactControl implements ReactManager
 
         if ($this->sleepForPeriod > 0) {
 
-            $this->logger->info("Start sleep for (microseconds) " . $this->sleepForPeriod . $this->loggerPostfix);
+            $this->logger->info("Start sleep for (microseconds) " . $this->sleepForPeriod);
             usleep($this->sleepForPeriod);
-            $this->logger->info("Finish sleep for (microseconds) " . $this->sleepForPeriod . $this->loggerPostfix);
+            $this->logger->info("Finish sleep for (microseconds) " . $this->sleepForPeriod);
 
             $this->sleepForPeriod = 0;
         }
 
         $this->replyToReplyStack->send(serialize(new PulsarIterationFinish()));
 
-        $this->logger->debug("Pulsar finish iteration and set false/zero values to relevant properties." . $this->loggerPostfix);
+        $this->logger->debug("Pulsar finish iteration and set false/zero values to relevant properties.");
 
         return null;
     }
