@@ -253,4 +253,16 @@ class Performer extends BaseExecutor implements PerformerZmqSubscriber
 
         return null;
     }
+
+    /**
+     * @return null
+     * @throws PublisherPulsarException
+     */
+    public function connectToPulsarAndWaitPermissionToAct()
+    {
+        $this->requestForActionPermission();
+        $this->waitAllowingSubscriptionMessage();
+
+        return null;
+    }
 }

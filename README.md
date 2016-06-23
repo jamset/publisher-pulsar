@@ -120,14 +120,11 @@ And subsidiary ReplyStack daemon command's class have to contain
 
 ###Including in process
 
-In process (in service) just above request to API (or other needed action) you should call this methods of 
-React\PulbisherPulsar\Performer methods
+In process (in service) just above request to API (or other needed action) you should call:
 
 ```php
 
-$this->zmqPerformer->requestForActionPermission();
-$this->zmqPerformer->waitAllowingSubscriptionMessage();
-
+$this->zmqPerformer->connectToPulsarAndWaitPermissionToAct();
 ```
 
 and when action will be done depends on its result you have to call method that push info to Pulsar with information 
