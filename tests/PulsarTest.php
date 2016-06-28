@@ -9,6 +9,9 @@
 class PulsarTest extends PHPUnit_Framework_TestCase
 {
 
+    /**
+     * @throws \React\PublisherPulsar\Inventory\Exceptions\PublisherPulsarException
+     */
     public function testPulsarLaunching()
     {
         $pulsar = new \React\PublisherPulsar\Pulsar();

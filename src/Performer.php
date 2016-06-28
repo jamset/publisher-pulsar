@@ -81,22 +81,6 @@ class Performer extends BaseExecutor implements PerformerZmqSubscriber
         $this->socketsParams = $socketsParams;
     }
 
-    /**
-     * @return BecomeTheSubscriberReplyDto
-     */
-    public function getBecomeTheSubscriberReplyDto()
-    {
-        return $this->becomeTheSubscriberReplyDto;
-    }
-
-    /**
-     * @param BecomeTheSubscriberReplyDto $becomeTheSubscriberReplyDto
-     */
-    public function setBecomeTheSubscriberReplyDto($becomeTheSubscriberReplyDto)
-    {
-        $this->becomeTheSubscriberReplyDto = $becomeTheSubscriberReplyDto;
-    }
-
     public function __construct(PerformerDto $performerDto)
     {
         parent::__construct($performerDto);
@@ -264,5 +248,29 @@ class Performer extends BaseExecutor implements PerformerZmqSubscriber
         $this->waitAllowingSubscriptionMessage();
 
         return null;
+    }
+
+    /**
+     * @return PublisherToSubscribersDto
+     */
+    public function getPublisherToSubscribersDto()
+    {
+        return $this->publisherToSubscribersDto;
+    }
+
+    /**
+     * @return BecomeTheSubscriberReplyDto
+     */
+    public function getBecomeTheSubscriberReplyDto()
+    {
+        return $this->becomeTheSubscriberReplyDto;
+    }
+
+    /**
+     * @param BecomeTheSubscriberReplyDto $becomeTheSubscriberReplyDto
+     */
+    public function setBecomeTheSubscriberReplyDto($becomeTheSubscriberReplyDto)
+    {
+        $this->becomeTheSubscriberReplyDto = $becomeTheSubscriberReplyDto;
     }
 }

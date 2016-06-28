@@ -521,7 +521,7 @@ class Pulsar extends BaseReactControl implements ReactManager
 
             $this->iterationsLimitExceeded = true;
 
-            $this->logger->debug($this->getPublisherPulsarDto()->getModuleName() . " was stopped because of increasing"
+            $this->logger->debug($this->getPublisherPulsarDto()->getModuleName() . " will stopped because of increasing"
                 . " of iterations number: " . $this->iterationsNumber . " with limit of " . $this->iterationsLimit
                 . " iterations");
 
@@ -535,7 +535,8 @@ class Pulsar extends BaseReactControl implements ReactManager
 
             }
 
-            $this->loop->stop();
+            die("Script stopped");
+            //$this->loop->stop();
         }
 
         return null;
