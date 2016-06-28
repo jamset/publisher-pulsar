@@ -7,6 +7,8 @@
  */
 namespace React\PublisherPulsar;
 
+use CommandsExecutor\CommandsManager;
+use CommandsExecutor\LinuxCommands;
 use React\FractalBasic\Abstracts\BaseReactControl;
 use React\FractalBasic\Interfaces\ReactManager;
 use React\FractalBasic\Inventory\EventsConstants;
@@ -54,6 +56,11 @@ class Pulsar extends BaseReactControl implements ReactManager
      * @var \ZMQSocket
      */
     protected $replyToReplyStack;
+
+    /**
+     * @var CommandsManager
+     */
+    protected $commandsManager;
 
     /**
      * @var bool
@@ -190,15 +197,26 @@ class Pulsar extends BaseReactControl implements ReactManager
      */
     protected $maxPerformerImitatorRequests = 20;
 
-    /**For tests purposes
+    /**For tests usage
      * @var int
      */
-    protected $limitNumbersOfIterations = 0;
+    protected $iterationsLimit = 0;
+
+    /**
+     * @var bool
+     */
+    protected $iterationsLimitExceeded = false;
+
 
     /**Increments by main periodic timer (initPulsar())
      * @var int
      */
     protected $iterationsNumber = 0;
+
+    public function __construct()
+    {
+        $this->commandsManager = new CommandsManager();
+    }
 
     /**
      * @return null
@@ -451,7 +469,7 @@ class Pulsar extends BaseReactControl implements ReactManager
 
             $this->iterationsNumber++;
 
-            $this->checkLimitNumbersOfIterations();
+            $this->checkIterationsLimit();
 
             if ($this->sleepForPeriod > 0) {
                 $this->logger->notice("Sleep for period: " . $this->sleepForPeriod);
@@ -497,15 +515,40 @@ class Pulsar extends BaseReactControl implements ReactManager
     /**
      * @return null
      */
-    protected function checkLimitNumbersOfIterations()
+    protected function checkIterationsLimit()
     {
-        if ($this->limitNumbersOfIterations > 0 && $this->limitNumbersOfIterations < $this->iterationsNumber) {
+        if ($this->iterationsLimit > 0 && $this->iterationsNumber > $this->iterationsLimit) {
 
-            $this->logger->debug($this->getPublisherPulsarDto()->getModuleName() . " was stopped because of increasing
-            of iterations number: " . $this->iterationsNumber . " with limit of " . $this->limitNumbersOfIterations . " iterations");
+            $this->iterationsLimitExceeded = true;
+
+            $this->logger->debug($this->getPublisherPulsarDto()->getModuleName() . " was stopped because of increasing"
+                . " of iterations number: " . $this->iterationsNumber . " with limit of " . $this->iterationsLimit
+                . " iterations");
+
+            try {
+
+                $this->stopReplyStack();
+
+            } catch (\Exception $e) {
+
+                $this->logger->error($e->getMessage());
+
+            }
 
             $this->loop->stop();
         }
+
+        return null;
+    }
+
+    /**
+     * @return null
+     * @throws \CommandsExecutor\Inventory\Exceptions\CommandsExecutionException
+     */
+    protected function stopReplyStack()
+    {
+        LinuxCommands::sendSigTermOrKill($this->commandsManager->getPidByPpid($this->replyStackProcess->getPid())->getPid());
+        LinuxCommands::tryTerminateProcess($this->replyStackProcess);
 
         return null;
     }
@@ -932,19 +975,34 @@ class Pulsar extends BaseReactControl implements ReactManager
     /**
      * @return int
      */
-    public function getLimitNumbersOfIterations()
+    public function getIterationsLimit()
     {
-        return $this->limitNumbersOfIterations;
+        return $this->iterationsLimit;
     }
 
     /**
-     * @param int $limitNumbersOfIterations
+     * @param int $iterationsLimit
      */
-    public function setLimitNumbersOfIterations($limitNumbersOfIterations)
+    public function setIterationsLimit($iterationsLimit)
     {
-        $this->limitNumbersOfIterations = $limitNumbersOfIterations;
+        $this->iterationsLimit = $iterationsLimit;
     }
 
+    /**
+     * @return boolean
+     */
+    public function isIterationsLimitExceeded()
+    {
+        return $this->iterationsLimitExceeded;
+    }
+
+    /**
+     * @param boolean $iterationsLimitExceeded
+     */
+    public function setIterationsLimitExceeded($iterationsLimitExceeded)
+    {
+        $this->iterationsLimitExceeded = $iterationsLimitExceeded;
+    }
 
 
 }

@@ -1,31 +1,19 @@
 <?php
-
 /**
  * Created by PhpStorm.
  * User: nms
  * Date: 03.06.16
  * Time: 15:13
  */
-use React\PublisherPulsar\Pulsar;
 
 class PulsarTest extends PHPUnit_Framework_TestCase
 {
 
-    public function testReceivingResultingPushMessages()
+    public function testPulsarLaunching()
     {
-        /*$pulsar = $this->getMockBuilder(Pulsar::class)
-        ->setMethods(['handleResultingPushMessages'])
-        ->getMock();
-
-        $pulsar->expects($this->once())
-            ->method('handleResultingPushMessages')
-            ->will($this->returnSelf());
-
-        $pulsar->manage();*/
-
         $pulsar = new \React\PublisherPulsar\Pulsar();
 
-        $pulsar->setLimitNumbersOfIterations(5);
+        $pulsar->setIterationsLimit(4);
 
         $publisherPulsarDto = new \React\PublisherPulsar\Inventory\PublisherPulsarDto();
 
@@ -35,7 +23,7 @@ class PulsarTest extends PHPUnit_Framework_TestCase
 
         $dir = __DIR__;
 
-        $publisherPulsarDto->setReplyStackCommandName("php $dir/ReplyStackCommand.php");
+        $publisherPulsarDto->setReplyStackCommandName("php $dir/Inventory/ReplyStackCommand.php");
 
         $publisherPulsarDto->setPerformerContainerActionMaxExecutionTime(7);
 
@@ -53,22 +41,9 @@ class PulsarTest extends PHPUnit_Framework_TestCase
 
         $pulsar->setPublisherPulsarDto($publisherPulsarDto);
 
-        echo "start manage \n";
-
         $pulsar->manage();
 
-        echo "finish manage \n";
-
-        /* 1. Запускаем пульсар
-         *
-         * 2. Сравниваем количество резалт месседжес по формуле количество подписчиков равно сумме резальтDto и пуш msg
-         * (count($this->resultingPushMessages) + $this->performerImitationRequests), $this->iAmSubscriber)
-         *
-         * 3. Можно смотреть отклонение в процентах
-         *
-         * 4. Можно смотреть с запуском дочерних процессов и их коннектом к ReplyStack
-         *
-         * */
+        $this->assertEquals(true, $pulsar->isIterationsLimitExceeded());
     }
 
 
