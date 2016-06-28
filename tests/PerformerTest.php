@@ -25,7 +25,7 @@ class PerformerTest extends PHPUnit_Framework_TestCase
     protected static $performer;
 
     /**
-     * Initialize Pulsar for connection
+     * Initialize Pulsar (and ReplyStack) for connection
      */
     public static function setUpBeforeClass()
     {
@@ -61,20 +61,27 @@ class PerformerTest extends PHPUnit_Framework_TestCase
     {
         sleep(2);
 
+        self::$performer->requestForActionPermission();
+
+        $this->assertInstanceOf(\React\PublisherPulsar\Inventory\BecomeTheSubscriberReplyDto::class,
+            self::$performer->getBecomeTheSubscriberReplyDto());
+    }
+
+    /**
+     * @throws \React\PublisherPulsar\Inventory\Exceptions\PublisherPulsarException
+     */
+    public function testWaitAllowingSubscriptionMessage()
+    {
+        sleep(2);
+
         self::$performer->waitAllowingSubscriptionMessage();
 
         $this->assertInstanceOf(\React\PublisherPulsar\Inventory\PublisherToSubscribersDto::class,
             self::$performer->getPublisherToSubscribersDto());
     }
 
-    public function testWaitAllowingSubscriptionMessage()
-    {
-        sleep(2);
-        $this->assertEquals(1, 1);
-    }
-
     /**
-     *Stop Pulsar
+     * Stop Pulsar (and ReplyStack)
      */
     public static function tearDownAfterClass()
     {
