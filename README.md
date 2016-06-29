@@ -54,7 +54,6 @@ On the schema described structure and meaning of commands between elements of th
 
 ![PublisherPulsar schema](https://github.com/jamset/publisher-pulsar/raw/master/images/publisher-pulsar-schema.jpg)
 
-
 ##Example
 
 ###Daemon settings

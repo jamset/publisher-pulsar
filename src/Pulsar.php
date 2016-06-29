@@ -12,6 +12,7 @@ use CommandsExecutor\LinuxCommands;
 use React\FractalBasic\Abstracts\BaseReactControl;
 use React\FractalBasic\Interfaces\ReactManager;
 use React\FractalBasic\Inventory\EventsConstants;
+use React\FractalBasic\Inventory\Exceptions\ReactManagerException;
 use React\FractalBasic\Inventory\InitStartMethodDto;
 use React\FractalBasic\Inventory\LoggingExceptions;
 use React\PublisherPulsar\Abstracts\PushDto;
@@ -535,7 +536,7 @@ class Pulsar extends BaseReactControl implements ReactManager
 
             }
 
-            die("Script stopped");
+            throw new ReactManagerException("Iterations limit was exceeded.");
         }
 
         return null;

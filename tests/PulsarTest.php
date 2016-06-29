@@ -16,7 +16,7 @@ class PulsarTest extends PHPUnit_Framework_TestCase
     {
         $pulsar = new \React\PublisherPulsar\Pulsar();
 
-        $pulsar->setIterationsLimit(4);
+        $pulsar->setIterationsLimit(7);
 
         $publisherPulsarDto = new \React\PublisherPulsar\Inventory\PublisherPulsarDto();
 
@@ -44,7 +44,12 @@ class PulsarTest extends PHPUnit_Framework_TestCase
 
         $pulsar->setPublisherPulsarDto($publisherPulsarDto);
 
-        $pulsar->manage();
+        try {
+
+            $pulsar->manage();
+
+        } catch (\Exception $e) {
+        }
 
         $this->assertEquals(true, $pulsar->isIterationsLimitExceeded());
     }
