@@ -46,6 +46,27 @@ class PublisherPulsarDto extends BaseReactControlDto
      */
     protected $maxWaitReplyStackResult;
 
+    /**Allowing to make permission to act or to coordinate certain subscribers activity
+     * @var PublisherToSubscribersDto
+     */
+    protected $publisherToSubscribersDto;
+
+    /**
+     * @return PublisherToSubscribersDto
+     */
+    public function getPublisherToSubscribersDto()
+    {
+        return $this->publisherToSubscribersDto;
+    }
+
+    /**
+     * @param PublisherToSubscribersDto $publisherToSubscribersDto
+     */
+    public function setPublisherToSubscribersDto($publisherToSubscribersDto)
+    {
+        $this->publisherToSubscribersDto = $publisherToSubscribersDto;
+    }
+
     /**
      * @return int seconds
      */

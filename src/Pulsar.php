@@ -605,7 +605,10 @@ class Pulsar extends BaseReactControl implements ReactManager
             $this->logger->notice("Wake up before publish.");
         }
 
-        $this->publisher->send(serialize(new PublisherToSubscribersDto()));
+        //allowing to send arbitrary message
+        $sendingMessage = ($this->getPublisherPulsarDto()->getPublisherToSubscribersDto()) ?: new PublisherToSubscribersDto();
+
+        $this->publisher->send(serialize($sendingMessage));
 
         //to checkWaitTimeExceeded for handlingResultingPushMessages
         $this->startAwaitBeReadyToAct = microtime(true);
