@@ -8,7 +8,7 @@ ReactPHP and ZMQ based module allowing to coordinate set of independent processe
 
 Additional needed libs installation guide could be found [here](https://github.com/jamset/gearman-conveyor/blob/master/docs/environment.md). Section "Install PECL" and "Optional".
 
-Note: not tested on PHP7
+Note: PHP7 compatible
 
 ##Description
 
@@ -76,8 +76,8 @@ Example for Laravel could look like this one:
         $publisherPulsarDto->setSubscribersPerIteration(10);
         $publisherPulsarDto->setModuleName('react:pulsar-ga');
         $publisherPulsarDto->setReplyStackCommandName('php artisan react:pulsar-reply-stack');
-        $publisherPulsarDto->setPerformerContainerActionMaxExecutionTime(7);
-        $publisherPulsarDto->setLogger(\Log::getMonolog());
+        $publisherPulsarDto->setPerformerContainerActionMaxExecutionTime(7);        
+        $publisherPulsarDto->setLogger(\Log::getMonolog()); //to use your StreamHandlers
 
         $publisherPulsarDto->setMaxWaitReplyStackResult(7);
 
@@ -127,7 +127,7 @@ And subsidiary ReplyStack daemon command's class have to contain
 In process (in service) just above request to API (or other needed action) you should init connection:
  
  ```php
-  $performerDto = new \React\PublisherPulsar\Inventory\PerformerDto();
+ $performerDto = new \React\PublisherPulsar\Inventory\PerformerDto();
  $performerDto->setModuleName("PerformerCommand");
  
  $performer = new \React\PublisherPulsar\Performer($performerDto);
