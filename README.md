@@ -45,6 +45,9 @@ processes. And when error is
 - If incoming error shows that Pulsar have to be stopped definitely for some period, it detect such signal and make usleep() for the 
 specified period
 
+- Allow to send arbitrary commands to subscribers by setting class extended from PublisherToSubscribersDto in PublisherPulsarDto
+ during initialization. And so one subscriber can contain logic of handling commands from different Pulsars.
+
 ##Schema
 
 On the schema described structure and meaning of commands between elements of the module
