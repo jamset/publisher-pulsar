@@ -25,7 +25,7 @@ class PerformerTest extends PHPUnit_Framework_TestCase
     protected static $performer;
 
     /**
-     * Initialize Pulsar (and ReplyStack) for connection
+     * Initialize Pulsar (ReplyStack) and Performer for connection
      */
     public static function setUpBeforeClass()
     {
@@ -81,7 +81,7 @@ class PerformerTest extends PHPUnit_Framework_TestCase
     }
 
     /**
-     * Stop Pulsar (and ReplyStack)
+     * Stop Pulsar (ReplyStack)
      */
     public static function tearDownAfterClass()
     {
