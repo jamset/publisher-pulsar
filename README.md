@@ -133,11 +133,15 @@ In process (in service) just above request to API (or other needed action) you s
  $performer = new \React\PublisherPulsar\Performer($performerDto);
  
  $performerSocketParams = new \React\PublisherPulsar\Inventory\PerformerSocketsParamsDto();
+ 
+ //this addresses is relevant to same addresses of Pulsar as zmq-pair (publish/subscribe, push/pull, request/reply)
  $performerSocketParams->setPublisherPulsarSocketAddress('tcp://127.0.0.1:6273');
  $performerSocketParams->setPushPulsarSocketAddress('tcp://127.0.0.1:6274');
  $performerSocketParams->setRequestPulsarRsSocketAddress('tcp://127.0.0.1:6275');
  
  $performer->setSocketsParams($performerSocketParams);
+ 
+ $this->zmqPerformer = $performer; 
  ```
   
  and then call in appropriate place:
