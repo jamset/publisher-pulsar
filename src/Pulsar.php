@@ -536,7 +536,6 @@ class Pulsar extends BaseReactControl implements ReactManager
             }
 
             die("Script stopped");
-            //$this->loop->stop();
         }
 
         return null;

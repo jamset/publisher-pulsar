@@ -69,17 +69,19 @@ Example for Laravel could look like this one:
         $pulsar = new \React\PublisherPulsar\Pulsar();
         
         $publisherPulsarDto = new \React\PublisherPulsar\Inventory\PublisherPulsarDto();
-
+        
         $publisherPulsarDto->setPulsationIterationPeriod(1);
         $publisherPulsarDto->setSubscribersPerIteration(10);
         $publisherPulsarDto->setModuleName('react:pulsar-ga');
         $publisherPulsarDto->setReplyStackCommandName('php artisan react:pulsar-reply-stack');
         $publisherPulsarDto->setPerformerContainerActionMaxExecutionTime(7);
+        $publisherPulsarDto->setLogger(\Log::getMonolog());
 
         $publisherPulsarDto->setMaxWaitReplyStackResult(7);
 
         $pulsarSocketsParams = new \React\PublisherPulsar\Inventory\PulsarSocketsParamsDto();
 
+        //it could be any free ports
         $pulsarSocketsParams->setReplyToReplyStackSocketAddress('tcp://127.0.0.1:6261');
         $pulsarSocketsParams->setPushToReplyStackSocketAddress('tcp://127.0.0.1:6262');
         $pulsarSocketsParams->setPublishSocketAddress('tcp://127.0.0.1:6263');
@@ -120,7 +122,23 @@ And subsidiary ReplyStack daemon command's class have to contain
 
 ###Including in process
 
-In process (in service) just above request to API (or other needed action) you should call:
+In process (in service) just above request to API (or other needed action) you should init connection:
+ 
+ ```php
+  $performerDto = new \React\PublisherPulsar\Inventory\PerformerDto();
+ $performerDto->setModuleName("PerformerCommand");
+ 
+ $performer = new \React\PublisherPulsar\Performer($performerDto);
+ 
+ $performerSocketParams = new \React\PublisherPulsar\Inventory\PerformerSocketsParamsDto();
+ $performerSocketParams->setPublisherPulsarSocketAddress('tcp://127.0.0.1:6273');
+ $performerSocketParams->setPushPulsarSocketAddress('tcp://127.0.0.1:6274');
+ $performerSocketParams->setRequestPulsarRsSocketAddress('tcp://127.0.0.1:6275');
+ 
+ $performer->setSocketsParams($performerSocketParams);
+ ```
+  
+ and then call in appropriate place:
 
 ```php
 
