@@ -214,6 +214,9 @@ class Pulsar extends BaseReactControl implements ReactManager
      */
     protected $iterationsNumber = 0;
 
+    /**
+     * Pulsar constructor.
+     */
     public function __construct()
     {
         $this->commandsManager = new CommandsManager();
@@ -337,14 +340,12 @@ class Pulsar extends BaseReactControl implements ReactManager
          * $data is serialized ReplyStackErrorDto
          */
         $this->replyStackProcess->stdout->on(EventsConstants::DATA, function ($data) {
-            $this->logger->critical($data);
-            //$this->replyStackProcess->close();
-            throw new PublisherPulsarException("Error in STDOUT due to initReplyStackProcess. " . $data);
+            $this->logger->debug($data);
+            //throw new PublisherPulsarException("Error in STDOUT due to initReplyStackProcess. " . $data);
         });
 
         $this->replyStackProcess->stderr->on(EventsConstants::DATA, function ($data) {
             $this->logger->critical($data);
-            //$this->replyStackProcess->close();
             throw new PublisherPulsarException("Error in STDERR due to initReplyStackProcess. " . $data);
         });
 

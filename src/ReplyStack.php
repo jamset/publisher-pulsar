@@ -47,6 +47,9 @@ class ReplyStack extends BaseSubsidiary
      */
     protected $loggerPostfix;
 
+    /**
+     * @return null
+     */
     public function startCommunication()
     {
         $this->initLoop();
@@ -106,6 +109,9 @@ class ReplyStack extends BaseSubsidiary
         return null;
     }
 
+    /**
+     * @return null
+     */
     public function startStackWork()
     {
         $getTaskDto = new ReplyStackToPulsarGetTaskRequestDto();
