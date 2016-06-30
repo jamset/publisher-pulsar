@@ -133,6 +133,8 @@ And subsidiary ReplyStack daemon command's class have to contain
 
 (and both of them have to be named in App\Console\Kernel file)
 
+Note: **very important that daemon have to be started earlier than processes-performers would.**
+
 ###Including in process
 
 In process (in service) just above request to API (or other needed action) you should init connection:
