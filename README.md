@@ -1,5 +1,6 @@
 # Publisher Pulsar
-ReactPHP and ZMQ based module allowing to coordinate set of independent processes, to provide processes simultaneous activity. 
+ReactPHP and ZMQ based module allowing to provide independent processes simultaneous activity 
+\[, to coordinate set of independent processes\]. 
 I.e. to not exceed API RPS (QPS) limits 
 (i.e. Google Analytics [10 QPS per IP](https://developers.google.com/analytics/devguides/config/mgmt/v3/limits-quotas))
 
