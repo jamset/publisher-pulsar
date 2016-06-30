@@ -1,6 +1,6 @@
 {
     "name": "jamset/publisher-pulsar",
-    "description": "ReactPHP based module allowing to coordinate set of independent processes",
+  "description": "ReactPHP and ZMQ based module allowing to coordinate set of independent processes",
     "require": {
       "php": ">=5.5.9",
       "jamset/react_fractal_basic": "^0",

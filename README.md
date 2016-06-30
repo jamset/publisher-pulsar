@@ -1,12 +1,14 @@
 # Publisher Pulsar
-ReactPHP and ZMQ based module allowing to coordinate set of independent processes. I.e. to not exceed API RPS limits 
-(i.e. Google Analytics 10 RPS, where RPS size is actual for November 2015)
+ReactPHP and ZMQ based module allowing to coordinate set of independent processes, to provide processes simultaneous activity. 
+I.e. to not exceed API RPS (QPS) limits 
+(i.e. Google Analytics [10 QPS per IP](https://developers.google.com/analytics/devguides/config/mgmt/v3/limits-quotas))
 
 ##Install
 
 `composer require jamset/publisher-pulsar`
 
-Additional needed libs installation guide could be found [here](https://github.com/jamset/gearman-conveyor/blob/master/docs/environment.md). Section "Install PECL" and "Optional".
+Additional needed libs installation guide could be found [here](https://github.com/jamset/gearman-conveyor/blob/master/docs/environment.md). 
+Section "Install PECL" and "Optional".
 
 Note: PHP7 compatible
 
@@ -15,12 +17,13 @@ Note: PHP7 compatible
 The idea that PublisherPulsar is the daemon, which allow to make some action simultaneously (i.e. connection to API) 
 for certain number of processes ('subscribers'). 
 
-I.e. limit for Google Analytics is 10 request per second, and so you can include in code of such processes ('services',
+I.e. limit for Google Analytics is 10 request (queries) per second, and so you can include in code of such processes ('services',
 that contain Performer class with relevant Pulsar integrated commands) connection to Pulsar, set in Pulsar settings 
 limit for 10 subscribers per iteration, set iteration size 1 second, and start daemon and processes. 
 
-All processes beginning after it will be connect to special stack (ReplyStack), which will notify Pulsar that subscribers are ready to make an action when all needed number of processes
-will be active (executed and paused on point that need Pulsar permission to execute further).
+All processes beginning after it will be connect to special stack (ReplyStack), which will notify Pulsar that subscribers 
+are ready to make an action when all needed number of processes
+will be active (executed and paused on point that need Pulsar permission to execute further.
 
 After it Pulsar send allowing message to processes (subscribers), that allow them to continue their execution, i.e. 
 make a request to API. And so the limitation of API wouldn't be exceeded.
@@ -72,14 +75,25 @@ Example for Laravel could look like this one:
         
         $publisherPulsarDto = new \React\PublisherPulsar\Inventory\PublisherPulsarDto();
         
-        $publisherPulsarDto->setPulsationIterationPeriod(1);
-        $publisherPulsarDto->setSubscribersPerIteration(10);
-        $publisherPulsarDto->setModuleName('react:pulsar-ga');
-        $publisherPulsarDto->setReplyStackCommandName('php artisan react:pulsar-reply-stack');
-        $publisherPulsarDto->setPerformerContainerActionMaxExecutionTime(7);        
-        $publisherPulsarDto->setLogger(\Log::getMonolog()); //to use your StreamHandlers
+        $publisherPulsarDto->setPulsationIterationPeriod(1); // it means that Pulsar's publishing would be no less than 1 second
+        $publisherPulsarDto->setSubscribersPerIteration(10); 
+        $publisherPulsarDto->setModuleName('react:pulsar-ga'); //arbitrary name
+        $publisherPulsarDto->setReplyStackCommandName('php artisan react:pulsar-reply-stack'); // address of subsidiary command 
+        //(its code is presented below)
+        $publisherPulsarDto->setPerformerContainerActionMaxExecutionTime(7); // how many seconds Pulsar will wait resulting message 
+        // from performers
+        $publisherPulsarDto->setLogger(\Log::getMonolog()); //to use your StreamHandlers. If won't set will be used Logger with putting all
+        logging to STDOUT
 
-        $publisherPulsarDto->setMaxWaitReplyStackResult(7);
+        $publisherPulsarDto->setMaxWaitReplyStackResult(7); // how many seconds Pulsar will wait connection of needed number
+        of performers/subscribers
+        
+        [For purposes of advanced processes management:
+        $publisherToSubscribersDto = new YourNameExtendedByPublisherToSubscribersDto(); 
+        $publisherToSubscribersDto->setYourProperty(); // any properties that can influence on performer execution logic
+        
+        $publisherPulsarDto->setPublisherToSubscribersDto($publisherToSubscribersDto);  
+        ]      
 
         $pulsarSocketsParams = new \React\PublisherPulsar\Inventory\PulsarSocketsParamsDto();
 
@@ -134,7 +148,7 @@ In process (in service) just above request to API (or other needed action) you s
  
  $performerSocketParams = new \React\PublisherPulsar\Inventory\PerformerSocketsParamsDto();
  
- //this addresses is relevant to same addresses of Pulsar as zmq-pair (publish/subscribe, push/pull, request/reply)
+ //this addresses is relevant to same addresses of Pulsar as zmq-pair (Publish/Subscribe, Push/Pull, Request/Reply)
  $performerSocketParams->setPublisherPulsarSocketAddress('tcp://127.0.0.1:6273');
  $performerSocketParams->setPushPulsarSocketAddress('tcp://127.0.0.1:6274');
  $performerSocketParams->setRequestPulsarRsSocketAddress('tcp://127.0.0.1:6275');
