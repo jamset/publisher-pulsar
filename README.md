@@ -18,7 +18,7 @@ Note: PHP7 compatible
 The idea that PublisherPulsar is the daemon, which allow to make some action simultaneously (i.e. connection to API) 
 for certain number of processes ('subscribers'). 
 
-I.e. limit for Google Analytics is 10 request (queries) per second, and so you can include in code of such processes ('services',
+I.e. limit for Google Analytics is 10 requests (queries) per second, and so you can include in code of such processes ('services',
 that contain Performer class with relevant Pulsar integrated commands) connection to Pulsar, set in Pulsar settings 
 limit for 10 subscribers per iteration, set iteration size 1 second, and start daemon and processes. 
 
