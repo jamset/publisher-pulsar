@@ -79,22 +79,18 @@ Example for Laravel could look like this one:
         $publisherPulsarDto->setPulsationIterationPeriod(1); // it means that Pulsar's publishing would be no less than 1 second
         $publisherPulsarDto->setSubscribersPerIteration(10); 
         $publisherPulsarDto->setModuleName('react:pulsar-ga'); //arbitrary name
-        $publisherPulsarDto->setReplyStackCommandName('php artisan react:pulsar-reply-stack'); // address of subsidiary command 
-        //(its code is presented below)
-        $publisherPulsarDto->setPerformerContainerActionMaxExecutionTime(7); // how many seconds Pulsar will wait resulting message 
-        // from performers
-        $publisherPulsarDto->setLogger(\Log::getMonolog()); //to use your StreamHandlers. If won't set will be used Logger with putting all
-        logging to STDOUT
+        $publisherPulsarDto->setReplyStackCommandName('php artisan react:pulsar-reply-stack'); // address of subsidiary command, its code is presented below
+        $publisherPulsarDto->setPerformerContainerActionMaxExecutionTime(7); // how many seconds Pulsar will wait resulting message from Service (Performer-Subscriber) from performers
+        $publisherPulsarDto->setLogger(\Log::getMonolog()); //to use your StreamHandlers. If won't set will be used Logger with putting all logging to STDOUT
 
-        $publisherPulsarDto->setMaxWaitReplyStackResult(7); // how many seconds Pulsar will wait connection of needed number
-        of performers/subscribers
+        $publisherPulsarDto->setMaxWaitReplyStackResult(7); // how many seconds Pulsar will wait connection of needed number of performers/subscribers
         
-        [For purposes of advanced processes management:
+        //[For purposes of advanced processes management:
         $publisherToSubscribersDto = new YourNameExtendedByPublisherToSubscribersDto(); 
         $publisherToSubscribersDto->setYourProperty(); // any properties that can influence on performer execution logic
         
         $publisherPulsarDto->setPublisherToSubscribersDto($publisherToSubscribersDto);  
-        ]      
+        //]      
 
         $pulsarSocketsParams = new \React\PublisherPulsar\Inventory\PulsarSocketsParamsDto();
 
