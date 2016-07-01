@@ -21,7 +21,7 @@ class PublisherPulsarDto extends BaseReactControlDto
     /**
      * @var int
      */
-    protected $subscribersPerIteration;
+    protected $subscribersPerIteration = 10;
 
     /**
      * @var PulsarSocketsParamsDto
@@ -50,6 +50,24 @@ class PublisherPulsarDto extends BaseReactControlDto
      * @var PublisherToSubscribersDto
      */
     protected $publisherToSubscribersDto;
+
+    /**
+     * @return null
+     */
+    public function initDefaultPulsarSocketsParams()
+    {
+        $pulsarSocketsParams = new \React\PublisherPulsar\Inventory\PulsarSocketsParamsDto();
+
+        $pulsarSocketsParams->setReplyToReplyStackSocketAddress('tcp://127.0.0.1:6271');
+        $pulsarSocketsParams->setPushToReplyStackSocketAddress('tcp://127.0.0.1:6272');
+        $pulsarSocketsParams->setPublishSocketAddress('tcp://127.0.0.1:6273');
+        $pulsarSocketsParams->setPullSocketAddress('tcp://127.0.0.1:6274');
+        $pulsarSocketsParams->setReplyStackSocketAddress('tcp://127.0.0.1:6275');
+
+        $this->pulsarSocketsParams = $pulsarSocketsParams;
+
+        return null;
+    }
 
     /**
      * @return PublisherToSubscribersDto

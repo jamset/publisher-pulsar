@@ -33,13 +33,7 @@ class PerformerTest extends PHPUnit_Framework_TestCase
         $performerDto->setModuleName("PerformerCommand");
 
         self::$performer = new \React\PublisherPulsar\Performer($performerDto);
-
-        $performerSocketParams = new \React\PublisherPulsar\Inventory\PerformerSocketsParamsDto();
-        $performerSocketParams->setPublisherPulsarSocketAddress('tcp://127.0.0.1:6273');
-        $performerSocketParams->setPushPulsarSocketAddress('tcp://127.0.0.1:6274');
-        $performerSocketParams->setRequestPulsarRsSocketAddress('tcp://127.0.0.1:6275');
-
-        self::$performer->setSocketsParams($performerSocketParams);
+        self::$performer->initDefaultPerformerSocketsParams();
 
         $dir = __DIR__;
 

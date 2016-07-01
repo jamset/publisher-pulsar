@@ -141,12 +141,12 @@ class Pulsar extends BaseReactControl implements ReactManager
     /**
      * @var int seconds
      */
-    protected $maxWaitAllSubscribersReadyBeforePublish = 10;
+    protected $maxWaitAllSubscribersReadyBeforePublish = 7;
 
     /**
      * @var int seconds
      */
-    protected $performerContainerActionMaxExecutionTime = 5;
+    protected $performerContainerActionMaxExecutionTime = 7;
 
     /**
      * @var bool
@@ -611,6 +611,8 @@ class Pulsar extends BaseReactControl implements ReactManager
         $sendingMessage = ($this->getPublisherPulsarDto()->getPublisherToSubscribersDto()) ?: new PublisherToSubscribersDto();
 
         $this->publisher->send(serialize($sendingMessage));
+
+        unset($sendingMessage);
 
         //to checkWaitTimeExceeded for handlingResultingPushMessages
         $this->startAwaitBeReadyToAct = microtime(true);

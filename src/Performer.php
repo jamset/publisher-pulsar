@@ -81,10 +81,29 @@ class Performer extends BaseExecutor implements PerformerZmqSubscriber
         $this->socketsParams = $socketsParams;
     }
 
+    /**
+     * Performer constructor.
+     * @param PerformerDto $performerDto
+     */
     public function __construct(PerformerDto $performerDto)
     {
         parent::__construct($performerDto);
         $this->performerEarlyTerminated = new PerformerEarlyTerminated();
+
+        return null;
+    }
+
+    /**
+     * @return null
+     */
+    public function initDefaultPerformerSocketsParams()
+    {
+        $performerSocketParams = new \React\PublisherPulsar\Inventory\PerformerSocketsParamsDto();
+        $performerSocketParams->setPublisherPulsarSocketAddress('tcp://127.0.0.1:6273');
+        $performerSocketParams->setPushPulsarSocketAddress('tcp://127.0.0.1:6274');
+        $performerSocketParams->setRequestPulsarRsSocketAddress('tcp://127.0.0.1:6275');
+
+        $this->setSocketsParams($performerSocketParams);
 
         return null;
     }
