@@ -220,6 +220,9 @@ class Performer extends BaseExecutor implements PerformerZmqSubscriber
         return null;
     }
 
+    /**
+     * @return null
+     */
     protected function initOrCheckPushConnection()
     {
         if (!$this->pushSocket) {

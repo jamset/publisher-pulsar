@@ -200,11 +200,6 @@ class Pulsar extends BaseReactControl implements ReactManager
      */
     protected $maxPerformerImitatorRequests = 20;
 
-    /**For tests usage
-     * @var int
-     */
-    protected $iterationsLimit = 0;
-
     /**
      * @var bool
      */
@@ -469,7 +464,7 @@ class Pulsar extends BaseReactControl implements ReactManager
      */
     protected function initPulsar()
     {
-        $this->loop->addPeriodicTimer($this->publisherPulsarDto->getPulsationIterationPeriod(), function ($timer) {
+        $this->loop->addPeriodicTimer($this->publisherPulsarDto->getPulsationIterationPeriod(), function () {
 
             $this->iterationsNumber++;
 
@@ -521,13 +516,15 @@ class Pulsar extends BaseReactControl implements ReactManager
      */
     protected function checkIterationsLimit()
     {
-        if ($this->iterationsLimit > 0 && $this->iterationsNumber > $this->iterationsLimit) {
+        if ($this->getPublisherPulsarDto()->getIterationsLimit() > 0
+            && $this->iterationsNumber > $this->getPublisherPulsarDto()->getIterationsLimit()
+        ) {
 
             $this->iterationsLimitExceeded = true;
 
             $this->logger->debug($this->getPublisherPulsarDto()->getModuleName() . " will stopped because of increasing"
-                . " of iterations number: " . $this->iterationsNumber . " with limit of " . $this->iterationsLimit
-                . " iterations");
+                . " of iterations number: " . $this->iterationsNumber . " with limit of "
+                . $this->getPublisherPulsarDto()->getIterationsLimit() . " iterations");
 
             try {
 
@@ -746,7 +743,6 @@ class Pulsar extends BaseReactControl implements ReactManager
 
         $this->logger->debug("Performer imitator finish work.");
         $this->performerImitatorActive = false;
-        //$this->performerImitationRequests = 0;
 
         return null;
     }
@@ -935,7 +931,8 @@ class Pulsar extends BaseReactControl implements ReactManager
 
         $this->replyToReplyStack->send(serialize(new PulsarIterationFinish()));
 
-        $this->logger->debug("Pulsar finish iteration and set false/zero values to relevant properties.");
+        $this->logger->debug("Pulsar finish iteration with number " . $this->iterationsNumber
+            . " and set false/zero values to relevant properties.");
 
         return null;
     }
@@ -981,36 +978,11 @@ class Pulsar extends BaseReactControl implements ReactManager
     }
 
     /**
-     * @return int
-     */
-    public function getIterationsLimit()
-    {
-        return $this->iterationsLimit;
-    }
-
-    /**
-     * @param int $iterationsLimit
-     */
-    public function setIterationsLimit($iterationsLimit)
-    {
-        $this->iterationsLimit = $iterationsLimit;
-    }
-
-    /**
      * @return boolean
      */
     public function isIterationsLimitExceeded()
     {
         return $this->iterationsLimitExceeded;
     }
-
-    /**
-     * @param boolean $iterationsLimitExceeded
-     */
-    public function setIterationsLimitExceeded($iterationsLimitExceeded)
-    {
-        $this->iterationsLimitExceeded = $iterationsLimitExceeded;
-    }
-
 
 }

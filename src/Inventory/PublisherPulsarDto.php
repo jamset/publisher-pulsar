@@ -51,6 +51,11 @@ class PublisherPulsarDto extends BaseReactDto
      */
     protected $publisherToSubscribersDto;
 
+    /**Limit of Pulsar's iterations
+     * @var int
+     */
+    protected $iterationsLimit = 0;
+
     /**
      * @return null
      */
@@ -179,6 +184,22 @@ class PublisherPulsarDto extends BaseReactDto
     public function setSubscribersPerIteration($subscribersPerIteration)
     {
         $this->subscribersPerIteration = $subscribersPerIteration;
+    }
+
+    /**
+     * @return int
+     */
+    public function getIterationsLimit()
+    {
+        return $this->iterationsLimit;
+    }
+
+    /**
+     * @param int $iterationsLimit
+     */
+    public function setIterationsLimit($iterationsLimit)
+    {
+        $this->iterationsLimit = $iterationsLimit;
     }
 
 

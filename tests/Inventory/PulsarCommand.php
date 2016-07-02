@@ -9,17 +9,17 @@ require_once "autoloader.php";
 
 $pulsar = new \React\PublisherPulsar\Pulsar();
 
+$publisherPulsarDto = new \React\PublisherPulsar\Inventory\PublisherPulsarDto();
+$publisherPulsarDto->setModuleName('react:pulsar');
+
 $cliParams = [];
 parse_str(implode('&', array_slice($argv, 1)), $cliParams);
 
 if (isset($cliParams['iterationsLimit'])) {
-    $pulsar->setIterationsLimit($cliParams['iterationsLimit']);
+    $publisherPulsarDto->setIterationsLimit($cliParams['iterationsLimit']);
 } else {
-    $pulsar->setIterationsLimit(100);
+    $publisherPulsarDto->setIterationsLimit(100);
 }
-
-$publisherPulsarDto = new \React\PublisherPulsar\Inventory\PublisherPulsarDto();
-$publisherPulsarDto->setModuleName('react:pulsar');
 
 $dir = __DIR__;
 
