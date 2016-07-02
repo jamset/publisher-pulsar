@@ -7,10 +7,9 @@
  */
 namespace React\PublisherPulsar\Inventory;
 
-use React\FractalBasic\Abstracts\Inventory\BaseReactDto;
-use Monolog\Logger;
+use FractalBasic\Inventory\Abstracts\BaseModuleDto;
 
-class ReplyStackDto extends BaseReactDto
+class ReplyStackDto extends BaseModuleDto
 {
     /**
      * @var string

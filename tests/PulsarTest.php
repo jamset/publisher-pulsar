@@ -20,7 +20,6 @@ class PulsarTest extends PHPUnit_Framework_TestCase
 
         $publisherPulsarDto->setIterationsLimit(20);
         $publisherPulsarDto->setModuleName('react:pulsar');
-        $publisherPulsarDto->setLogger(new \Monolog\Logger("Pulsar-test-logger"));
 
         $dir = __DIR__;
         $publisherPulsarDto->setReplyStackCommandName("php $dir/Inventory/ReplyStackCommand.php");

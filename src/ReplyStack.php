@@ -7,10 +7,10 @@
  */
 namespace React\PublisherPulsar;
 
+use FractalBasic\Inventory\InitStartMethodDto;
 use React\FractalBasic\Abstracts\BaseSubsidiary;
 use React\FractalBasic\Inventory\ErrorsConstants;
 use React\FractalBasic\Inventory\EventsConstants;
-use React\FractalBasic\Inventory\InitStartMethodDto;
 use React\PublisherPulsar\Inventory\PreparingRequestDto;
 use React\PublisherPulsar\Inventory\PulsarErrorConstants;
 use React\PublisherPulsar\Inventory\PulsarToReplyStackReplyDto;
@@ -75,7 +75,7 @@ class ReplyStack extends BaseSubsidiary
                 $this->pulsarRequestSocket->connect($replyStackDto->getReplyStackVsPulsarSocketAddress());
                 $this->performersReplySocket->bind($replyStackDto->getReplyStackVsPerformersSocketAddress());
 
-                $this->reactDto = $replyStackDto;
+                $this->moduleDto = $replyStackDto;
                 $initDto = new InitStartMethodDto();
                 $initDto->setShutDownArg('warning');
                 $this->initStartMethods($initDto);

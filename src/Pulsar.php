@@ -9,11 +9,11 @@ namespace React\PublisherPulsar;
 
 use CommandsExecutor\CommandsManager;
 use CommandsExecutor\LinuxCommands;
-use React\FractalBasic\Abstracts\BaseReactControl;
+use FractalBasic\Inventory\InitStartMethodDto;
+use React\FractalBasic\Abstracts\BaseReact;
 use React\FractalBasic\Interfaces\ReactManager;
 use React\FractalBasic\Inventory\EventsConstants;
 use React\FractalBasic\Inventory\Exceptions\ReactManagerException;
-use React\FractalBasic\Inventory\InitStartMethodDto;
 use React\FractalBasic\Inventory\LoggingExceptions;
 use React\PublisherPulsar\Abstracts\PushDto;
 use React\PublisherPulsar\Inventory\ActionResultingPushDto;
@@ -36,7 +36,7 @@ use React\ChildProcess\Process;
 use React\ZMQ\Context;
 use React\ZMQ\SocketWrapper;
 
-class Pulsar extends BaseReactControl implements ReactManager
+class Pulsar extends BaseReact implements ReactManager
 {
     /**
      * @var PublisherPulsarDto
@@ -229,7 +229,7 @@ class Pulsar extends BaseReactControl implements ReactManager
             throw new PublisherPulsarException("PublisherPulsarDto wasn't set.");
         }
 
-        $this->reactDto = $this->publisherPulsarDto;
+        $this->moduleDto = $this->publisherPulsarDto;
 
         $initDto = new InitStartMethodDto();
         $initDto->setShutDownArg('warning');

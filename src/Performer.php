@@ -320,7 +320,7 @@ class Performer extends BaseExecutor implements PerformerZmqSubscriber
      */
     public function setPerformerDto(PerformerDto $performerDto)
     {
-        $this->reactDto = $performerDto;
+        $this->moduleDto = $performerDto;
         $this->initLoggers();
     }
 
