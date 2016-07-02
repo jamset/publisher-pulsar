@@ -75,11 +75,12 @@ class ReplyStack extends BaseSubsidiary
                 $this->pulsarRequestSocket->connect($replyStackDto->getReplyStackVsPulsarSocketAddress());
                 $this->performersReplySocket->bind($replyStackDto->getReplyStackVsPerformersSocketAddress());
 
-                $this->reactControlDto = $replyStackDto;
+                $this->reactDto = $replyStackDto;
                 $initDto = new InitStartMethodDto();
                 $initDto->setShutDownArg('warning');
                 $this->initStartMethods($initDto);
 
+                //TODO: make resolver of ways of ReplyStack logging
                 //$this->logger->debug("ReplyStack receive initDto from Pulsar.");
                 $this->loop->nextTick([$this, 'startStackWork']);
 

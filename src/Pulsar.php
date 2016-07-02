@@ -193,6 +193,8 @@ class Pulsar extends BaseReactControl implements ReactManager
      */
     protected $performerImitationRequests = 0;
 
+
+    //TODO: delete
     /**
      * @var int
      */
@@ -232,7 +234,7 @@ class Pulsar extends BaseReactControl implements ReactManager
             throw new PublisherPulsarException("PublisherPulsarDto wasn't set.");
         }
 
-        $this->reactControlDto = $this->publisherPulsarDto;
+        $this->reactDto = $this->publisherPulsarDto;
 
         $initDto = new InitStartMethodDto();
         $initDto->setShutDownArg('warning');
@@ -565,17 +567,16 @@ class Pulsar extends BaseReactControl implements ReactManager
         $checkName = "TO PUBLISH";
         $this->startLogCheckIsReady($checkName);
 
-        if (
-        $this->checkEquality(
-            $this->shouldBeSubscribersNumber,
+        if ($this->checkEquality($this->shouldBeSubscribersNumber,
             ($this->iAmSubscriber + $this->doNotConsiderMeAsSubscriber + $this->performerImitationRequests))
         ) {
             $this->logger->debug("All considered subscribers ready.");
             $checkResult = true;
         } elseif ($this->checkWaitTimeExceeded($this->maxWaitAllSubscribersReadyBeforePublish)) {
-            $this->logger->info("FORCE ALLOWING TO PUBLISH.");
+            $this->logger->info("FORCE allowing to PUBLISH.");
             // Responded subscribers number less, than should be (because of unexpected troubles with
             // performers process or because of unexpected push messages handling
+            // Or too many performer imitator request
             $checkResult = true;
         }
 

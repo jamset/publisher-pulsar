@@ -22,6 +22,12 @@ use React\PublisherPulsar\Inventory\ReadyToGetSubscriptionMsg;
 
 class Performer extends BaseExecutor implements PerformerZmqSubscriber
 {
+
+    /**
+     * @var PerformerDto
+     */
+    protected $performerDto;
+
     /**
      * @var PerformerSocketsParamsDto
      */
@@ -58,36 +64,16 @@ class Performer extends BaseExecutor implements PerformerZmqSubscriber
     protected $performerEarlyTerminated;
 
     /**
-     * @return PerformerEarlyTerminated
-     */
-    public function getPerformerEarlyTerminated()
-    {
-        return $this->performerEarlyTerminated;
-    }
-
-    /**
-     * @return PerformerSocketsParamsDto
-     */
-    public function getSocketsParams()
-    {
-        return $this->socketsParams;
-    }
-
-    /**
-     * @param PerformerSocketsParamsDto $socketsParams
-     */
-    public function setSocketsParams(PerformerSocketsParamsDto $socketsParams)
-    {
-        $this->socketsParams = $socketsParams;
-    }
-
-    /**
      * Performer constructor.
      * @param PerformerDto $performerDto
      */
-    public function __construct(PerformerDto $performerDto)
+    public function __construct(PerformerDto $performerDto = null)
     {
-        parent::__construct($performerDto);
+        //legacy
+        if ($performerDto) {
+            parent::__construct($performerDto);
+        }
+
         $this->performerEarlyTerminated = new PerformerEarlyTerminated();
 
         return null;
@@ -292,4 +278,47 @@ class Performer extends BaseExecutor implements PerformerZmqSubscriber
     {
         $this->becomeTheSubscriberReplyDto = $becomeTheSubscriberReplyDto;
     }
+
+    /**
+     * @return PerformerEarlyTerminated
+     */
+    public function getPerformerEarlyTerminated()
+    {
+        return $this->performerEarlyTerminated;
+    }
+
+    /**
+     * @return PerformerSocketsParamsDto
+     */
+    public function getSocketsParams()
+    {
+        return $this->socketsParams;
+    }
+
+    /**
+     * @param PerformerSocketsParamsDto $socketsParams
+     */
+    public function setSocketsParams(PerformerSocketsParamsDto $socketsParams)
+    {
+        $this->initZMQContext();
+        $this->socketsParams = $socketsParams;
+    }
+
+    /**
+     * @return PerformerDto
+     */
+    public function getPerformerDto()
+    {
+        return $this->performerDto;
+    }
+
+    /**
+     * @param PerformerDto $performerDto
+     */
+    public function setPerformerDto(PerformerDto $performerDto)
+    {
+        $this->reactDto = $performerDto;
+        $this->initLoggers();
+    }
+
 }

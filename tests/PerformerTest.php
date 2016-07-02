@@ -29,15 +29,17 @@ class PerformerTest extends PHPUnit_Framework_TestCase
      */
     public static function setUpBeforeClass()
     {
-        $performerDto = new \React\PublisherPulsar\Inventory\PerformerDto();
-        $performerDto->setModuleName("PerformerCommand");
+        self::$performer = new \React\PublisherPulsar\Performer();
 
-        self::$performer = new \React\PublisherPulsar\Performer($performerDto);
+        $performerDto = new \React\PublisherPulsar\Inventory\PerformerDto();
+        $performerDto->setModuleName("PerformerTest");
+
+        self::$performer->setPerformerDto($performerDto);
         self::$performer->initDefaultPerformerSocketsParams();
 
         $dir = __DIR__;
 
-        $cmd = "php $dir/Inventory/PulsarCommand.php iterationsLimit=20";
+        $cmd = "php $dir/Inventory/PulsarCommand.php iterationsLimit=10";
 
         $fdSpec = [
             ['pipe', 'r'], // stdin

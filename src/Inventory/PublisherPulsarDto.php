@@ -7,10 +7,10 @@
  */
 namespace React\PublisherPulsar\Inventory;
 
-use React\FractalBasic\Abstracts\Inventory\BaseReactControlDto;
+use React\FractalBasic\Abstracts\Inventory\BaseReactDto;
 use Monolog\Logger;
 
-class PublisherPulsarDto extends BaseReactControlDto
+class PublisherPulsarDto extends BaseReactDto
 {
 
     /**
