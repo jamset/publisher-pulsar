@@ -16,9 +16,9 @@ $cliParams = [];
 parse_str(implode('&', array_slice($argv, 1)), $cliParams);
 
 if (isset($cliParams['iterationsLimit'])) {
-    $publisherPulsarDto->setIterationsLimit($cliParams['iterationsLimit']);
+    $publisherPulsarDto->setTimerIterationsLimit($cliParams['iterationsLimit']);
 } else {
-    $publisherPulsarDto->setIterationsLimit(100);
+    $publisherPulsarDto->setTimerIterationsLimit(100);
 }
 
 $dir = __DIR__;

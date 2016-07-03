@@ -33,7 +33,6 @@ class PerformerTest extends PHPUnit_Framework_TestCase
 
         $performerDto = new \React\PublisherPulsar\Inventory\PerformerDto();
         $performerDto->setModuleName("PerformerTest");
-        $performerDto->setLogger(new \Monolog\Logger("Performer-logger"));
 
         self::$performer->setPerformerDto($performerDto);
         self::$performer->initDefaultPerformerSocketsParams();
