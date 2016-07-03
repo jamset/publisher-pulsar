@@ -72,17 +72,26 @@ Example for Laravel could look like this one:
      */
     public function fire()
     {
+    
+        //You can launch it out of the box if Pulsar and subscribers launching on one node. with default properties 
+        //(no less than 1 second for iteration, 10 subscribers)
+    
         $pulsar = new \React\PublisherPulsar\Pulsar();
         
-        $publisherPulsarDto = new \React\PublisherPulsar\Inventory\PublisherPulsarDto();
+        $publisherPulsarDto = new \React\PublisherPulsar\Inventory\PublisherPulsarDto();              
+        $publisherPulsarDto->setModuleName('react:pulsar'); //arbitrary name        
+        $publisherPulsarDto->setReplyStackCommandName('php artisan react:pulsar-reply-stack'); // address of subsidiary command, its code is presented below
+        $publisherPulsarDto->initDefaultPulsarSocketsParams();
+        
+        $pulsar->setPublisherPulsarDto($publisherPulsarDto);
+        $pulsar->manage();
+        
+        //Or you can change parameters for your purposes     
         
         $publisherPulsarDto->setPulsationIterationPeriod(1); // it means that Pulsar's publishing would be no less than 1 second
-        $publisherPulsarDto->setSubscribersPerIteration(10); 
-        $publisherPulsarDto->setModuleName('react:pulsar-ga'); //arbitrary name
-        $publisherPulsarDto->setReplyStackCommandName('php artisan react:pulsar-reply-stack'); // address of subsidiary command, its code is presented below
+        $publisherPulsarDto->setSubscribersPerIteration(10);         
         $publisherPulsarDto->setPerformerContainerActionMaxExecutionTime(7); // how many seconds Pulsar will wait resulting message from Service (Performer-Subscriber) from performers
         $publisherPulsarDto->setLogger(\Log::getMonolog()); //to use your StreamHandlers. If won't set will be used Logger with putting all logging to STDOUT
-
         $publisherPulsarDto->setMaxWaitReplyStackResult(7); // how many seconds Pulsar will wait connection of needed number of performers/subscribers
         
         //[For purposes of advanced processes management:
@@ -140,20 +149,32 @@ Note: **very important that daemon have to be started earlier than processes-per
 In process (in service) just above request to API (or other needed action) you should init connection:
  
  ```php
- $performerDto = new \React\PublisherPulsar\Inventory\PerformerDto();
- $performerDto->setModuleName("PerformerCommand");
  
- $performer = new \React\PublisherPulsar\Performer($performerDto);
+//Such as Pulsar it has the out of the box mode:
  
- $performerSocketParams = new \React\PublisherPulsar\Inventory\PerformerSocketsParamsDto();
+$performer = new \React\PublisherPulsar\Performer();
  
- //this addresses is relevant to same addresses of Pulsar as zmq-pair (Publish/Subscribe, Push/Pull, Request/Reply)
- $performerSocketParams->setPublisherPulsarSocketAddress('tcp://127.0.0.1:6273');
- $performerSocketParams->setPushPulsarSocketAddress('tcp://127.0.0.1:6274');
- $performerSocketParams->setRequestPulsarRsSocketAddress('tcp://127.0.0.1:6275');
+$performerDto = new \React\PublisherPulsar\Inventory\PerformerDto();
+$performerDto->setModuleName("YourServiceContainingPerformerName");
+
+$performer->setPerformerDto($performerDto);
+$performer->initDefaultPerformerSocketsParams();
  
- $performer->setSocketsParams($performerSocketParams);
+$this->zmqPerformer = $performer;  
  
+//and tuning mode
+
+$performerDto->setLogger(\Log::getMonolog()); 
+ 
+$performerSocketParams = new \React\PublisherPulsar\Inventory\PerformerSocketsParamsDto();
+
+//this addresses is the same with addresses of relevant Pulsar's properties as ZMQ-pair (Publish/Subscribe, Push/Pull, Request/Reply)
+$performerSocketParams->setPublisherPulsarSocketAddress('tcp://127.0.0.1:6273');
+$performerSocketParams->setPushPulsarSocketAddress('tcp://127.0.0.1:6274');
+$performerSocketParams->setRequestPulsarRsSocketAddress('tcp://127.0.0.1:6275');
+
+$performer->setSocketsParams($performerSocketParams);
+
  $this->zmqPerformer = $performer; 
  ```
   
