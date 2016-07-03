@@ -95,11 +95,11 @@ Example for Laravel could look like this one:
         $pulsarSocketsParams = new \React\PublisherPulsar\Inventory\PulsarSocketsParamsDto();
 
         //it could be any free ports
-        $pulsarSocketsParams->setReplyToReplyStackSocketAddress('tcp://127.0.0.1:6261');
-        $pulsarSocketsParams->setPushToReplyStackSocketAddress('tcp://127.0.0.1:6262');
-        $pulsarSocketsParams->setPublishSocketAddress('tcp://127.0.0.1:6263');
-        $pulsarSocketsParams->setPullSocketAddress('tcp://127.0.0.1:6264');
-        $pulsarSocketsParams->setReplyStackSocketAddress('tcp://127.0.0.1:6265');
+        $pulsarSocketsParams->setReplyToReplyStackSocketAddress('tcp://127.0.0.1:6271');
+        $pulsarSocketsParams->setPushToReplyStackSocketAddress('tcp://127.0.0.1:6272');
+        $pulsarSocketsParams->setPublishSocketAddress('tcp://127.0.0.1:6273');
+        $pulsarSocketsParams->setPullSocketAddress('tcp://127.0.0.1:6274');
+        $pulsarSocketsParams->setReplyStackSocketAddress('tcp://127.0.0.1:6275');
 
         $publisherPulsarDto->setPulsarSocketsParams($pulsarSocketsParams);
 
