@@ -62,7 +62,9 @@ On the schema described structure and meaning of commands between elements of th
 
 ###Daemon settings
 
-Example for Laravel could look like this one:
+Example for Laravel could look like this one. 
+
+Out of the box (among other it's default socket params for one node for Pulsar and performers):
 
 ```php
     /**
@@ -84,9 +86,16 @@ Example for Laravel could look like this one:
         $publisherPulsarDto->initDefaultPulsarSocketsParams();
         
         $pulsar->setPublisherPulsarDto($publisherPulsarDto);
-        $pulsar->manage();
+        $pulsar->manage();      
         
-        //Or you can change parameters for your purposes     
+        return null;
+    }
+
+```
+
+And with additional options:
+
+```php
         
         $publisherPulsarDto->setPulsationIterationPeriod(1); // it means that Pulsar's publishing would be no less than 1 second
         $publisherPulsarDto->setSubscribersPerIteration(10);         
@@ -116,9 +125,6 @@ Example for Laravel could look like this one:
 
         $pulsar->manage();
 
-        return null;
-    }
-
 ```
 
 And subsidiary ReplyStack daemon command's class have to contain
@@ -146,12 +152,10 @@ Note: **very important that daemon have to be started earlier than processes-per
 
 ###Including in process
 
-In process (in service) just above request to API (or other needed action) you should init connection:
+Out of the box:
  
- ```php
- 
-//Such as Pulsar it has the out of the box mode:
- 
+```php
+  
 $performer = new \React\PublisherPulsar\Performer();
  
 $performerDto = new \React\PublisherPulsar\Inventory\PerformerDto();
@@ -161,8 +165,11 @@ $performer->setPerformerDto($performerDto);
 $performer->initDefaultPerformerSocketsParams();
  
 $this->zmqPerformer = $performer;  
+```
+
+And with options:
  
-//and tuning mode
+```php 
 
 $performerDto->setLogger(\Log::getMonolog()); 
  
@@ -179,7 +186,7 @@ $performer->setPerformerDto($performerDto);
 $this->zmqPerformer = $performer; 
  ```
   
- and then call in appropriate place:
+ and then call in appropriate place (before action that have to be coordinated):
 
 ```php
 
