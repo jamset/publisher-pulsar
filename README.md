@@ -73,7 +73,7 @@ Example for Laravel could look like this one:
     public function fire()
     {
     
-        //You can launch it out of the box if Pulsar and subscribers launching on one node. with default properties 
+        //You can launch it out of the box if Pulsar and subscribers launching on one node, with default properties 
         //(no less than 1 second for iteration, 10 subscribers)
     
         $pulsar = new \React\PublisherPulsar\Pulsar();
@@ -155,7 +155,7 @@ In process (in service) just above request to API (or other needed action) you s
 $performer = new \React\PublisherPulsar\Performer();
  
 $performerDto = new \React\PublisherPulsar\Inventory\PerformerDto();
-$performerDto->setModuleName("YourServiceContainingPerformerName");
+$performerDto->setModuleName("YourServiceNameContainingPerformer");
 
 $performer->setPerformerDto($performerDto);
 $performer->initDefaultPerformerSocketsParams();
