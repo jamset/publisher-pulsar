@@ -7,9 +7,30 @@
  */
 namespace React\PublisherPulsar\Inventory;
 
-use React\FractalBasic\Abstracts\Inventory\BaseExecutorDto;
+use FractalBasic\ZMQ\Abstracts\Inventory\BaseZMQDto;
 
-class PerformerDto extends BaseExecutorDto
+class PerformerDto extends BaseZMQDto
 {
+    /**
+     * @var PerformerSocketsParamsDto
+     */
+    protected $socketsParams;
+
+    /**
+     * @return PerformerSocketsParamsDto
+     */
+    public function getSocketsParams()
+    {
+        return $this->socketsParams;
+    }
+
+    /**
+     * @param PerformerSocketsParamsDto $socketsParams
+     */
+    public function setSocketsParams(PerformerSocketsParamsDto $socketsParams)
+    {
+        $this->socketsParams = $socketsParams;
+    }
+
 
 }

@@ -167,15 +167,16 @@ $this->zmqPerformer = $performer;
 $performerDto->setLogger(\Log::getMonolog()); 
  
 $performerSocketParams = new \React\PublisherPulsar\Inventory\PerformerSocketsParamsDto();
-
 //this addresses is the same with addresses of relevant Pulsar's properties as ZMQ-pair (Publish/Subscribe, Push/Pull, Request/Reply)
 $performerSocketParams->setPublisherPulsarSocketAddress('tcp://127.0.0.1:6273');
 $performerSocketParams->setPushPulsarSocketAddress('tcp://127.0.0.1:6274');
 $performerSocketParams->setRequestPulsarRsSocketAddress('tcp://127.0.0.1:6275');
 
-$performer->setSocketsParams($performerSocketParams);
+$performerDto->setSocketsParams($performerSocketParams);
 
- $this->zmqPerformer = $performer; 
+$performer->setPerformerDto($performerDto);
+
+$this->zmqPerformer = $performer; 
  ```
   
  and then call in appropriate place:

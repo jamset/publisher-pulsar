@@ -29,11 +29,6 @@ class Performer extends BaseExecutor implements PerformerZmqSubscriber
     protected $performerDto;
 
     /**
-     * @var PerformerSocketsParamsDto
-     */
-    protected $socketsParams;
-
-    /**
      * @var BecomeTheSubscriberReplyDto
      */
     protected $becomeTheSubscriberReplyDto;
@@ -104,7 +99,7 @@ class Performer extends BaseExecutor implements PerformerZmqSubscriber
 
         if (!$this->requestSocket) {
             $this->requestSocket = $this->context->getSocket(\ZMQ::SOCKET_REQ);
-            $this->requestSocket->connect($this->socketsParams->getRequestPulsarRsSocketAddress());
+            $this->requestSocket->connect($this->getSocketsParams()->getRequestPulsarRsSocketAddress());
         }
 
         $requestDto = new PreparingRequestDto();
@@ -149,7 +144,7 @@ class Performer extends BaseExecutor implements PerformerZmqSubscriber
     {
         if (!$this->subscriberSocket) {
             $this->subscriberSocket = $this->context->getSocket(\ZMQ::SOCKET_SUB);
-            $this->subscriberSocket->connect($this->socketsParams->getPublisherPulsarSocketAddress());
+            $this->subscriberSocket->connect($this->getSocketsParams()->getPublisherPulsarSocketAddress());
         }
 
         $this->subscriberSocket->setSockOpt(\ZMQ::SOCKOPT_SUBSCRIBE, "");
@@ -227,7 +222,7 @@ class Performer extends BaseExecutor implements PerformerZmqSubscriber
     {
         if (!$this->pushSocket) {
             $this->pushSocket = $this->context->getSocket(\ZMQ::SOCKET_PUSH);
-            $this->pushSocket->connect($this->socketsParams->getPushPulsarSocketAddress());
+            $this->pushSocket->connect($this->getSocketsParams()->getPushPulsarSocketAddress());
         }
 
         return null;
@@ -295,7 +290,7 @@ class Performer extends BaseExecutor implements PerformerZmqSubscriber
      */
     public function getSocketsParams()
     {
-        return $this->socketsParams;
+        return $this->getPerformerDto()->getSocketsParams();
     }
 
     /**
@@ -303,8 +298,7 @@ class Performer extends BaseExecutor implements PerformerZmqSubscriber
      */
     public function setSocketsParams(PerformerSocketsParamsDto $socketsParams)
     {
-        $this->initZMQContext();
-        $this->socketsParams = $socketsParams;
+        $this->getPerformerDto()->setSocketsParams($socketsParams);
     }
 
     /**
@@ -312,7 +306,7 @@ class Performer extends BaseExecutor implements PerformerZmqSubscriber
      */
     public function getPerformerDto()
     {
-        return $this->performerDto;
+        return $this->moduleDto;
     }
 
     /**
@@ -322,6 +316,7 @@ class Performer extends BaseExecutor implements PerformerZmqSubscriber
     {
         $this->moduleDto = $performerDto;
         $this->initLoggers();
+        $this->initZMQContext();
     }
 
 }

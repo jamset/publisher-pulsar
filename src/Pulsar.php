@@ -229,8 +229,6 @@ class Pulsar extends BaseReact implements ReactManager
             throw new PublisherPulsarException("PublisherPulsarDto wasn't set.");
         }
 
-        $this->moduleDto = $this->publisherPulsarDto;
-
         $initDto = new InitStartMethodDto();
         $initDto->setShutDownArg('warning');
         $this->initStartMethods($initDto);
@@ -710,16 +708,18 @@ class Pulsar extends BaseReact implements ReactManager
 
         if (!$this->performerImitator) {
 
+            $this->performerImitator = new Performer();
+
             $performerDto = new PerformerDto();
             $performerDto->setLogger($this->logger);
             $performerDto->setModuleName(PerformerConstants::PERFORMER_IMITATOR);
 
-            $this->performerImitator = new Performer($performerDto);
-
             $performerSocketParams = new PerformerSocketsParamsDto();
             $performerSocketParams->setRequestPulsarRsSocketAddress($this->pulsarSocketsParams->getReplyStackSocketAddress());
 
-            $this->performerImitator->setSocketsParams($performerSocketParams);
+            $performerDto->setSocketsParams($performerSocketParams);
+
+            $this->performerImitator->setPerformerDto($performerDto);
         }
 
         $sendStatuses = [];
@@ -950,6 +950,7 @@ class Pulsar extends BaseReact implements ReactManager
      */
     public function setPublisherPulsarDto($publisherPulsarDto)
     {
+        $this->moduleDto = $publisherPulsarDto;
         $this->publisherPulsarDto = $publisherPulsarDto;
     }
 
