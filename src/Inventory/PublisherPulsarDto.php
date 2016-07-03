@@ -50,10 +50,10 @@ class PublisherPulsarDto extends BaseModuleDto
      */
     protected $publisherToSubscribersDto;
 
-    /**Limit of Pulsar's iterations
+    /**Limit of Pulsar's timer iterations
      * @var int
      */
-    protected $iterationsLimit = 0;
+    protected $timerIterationsLimit = 0;
 
     /**
      * @return null
@@ -188,17 +188,17 @@ class PublisherPulsarDto extends BaseModuleDto
     /**
      * @return int
      */
-    public function getIterationsLimit()
+    public function getTimerIterationsLimit()
     {
-        return $this->iterationsLimit;
+        return $this->timerIterationsLimit;
     }
 
     /**
-     * @param int $iterationsLimit
+     * @param int $timerIterationsLimit
      */
-    public function setIterationsLimit($iterationsLimit)
+    public function setTimerIterationsLimit($timerIterationsLimit)
     {
-        $this->iterationsLimit = $iterationsLimit;
+        $this->timerIterationsLimit = $timerIterationsLimit;
     }
 
 

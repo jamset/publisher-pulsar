@@ -203,13 +203,13 @@ class Pulsar extends BaseReact implements ReactManager
     /**
      * @var bool
      */
-    protected $iterationsLimitExceeded = false;
+    protected $timerIterationsLimitExceeded = false;
 
 
     /**Increments by main periodic timer (initPulsar())
      * @var int
      */
-    protected $iterationsNumber = 0;
+    protected $timerIterationsNumber = 0;
 
     /**
      * Pulsar constructor.
@@ -466,9 +466,9 @@ class Pulsar extends BaseReact implements ReactManager
     {
         $this->loop->addPeriodicTimer($this->publisherPulsarDto->getPulsationIterationPeriod(), function () {
 
-            $this->iterationsNumber++;
+            $this->timerIterationsNumber++;
 
-            $this->checkIterationsLimit();
+            $this->checkTimerIterationsLimit();
 
             if ($this->sleepForPeriod > 0) {
                 $this->logger->notice("Sleep for period: " . $this->sleepForPeriod);
@@ -514,17 +514,17 @@ class Pulsar extends BaseReact implements ReactManager
     /**
      * @return null
      */
-    protected function checkIterationsLimit()
+    protected function checkTimerIterationsLimit()
     {
-        if ($this->getPublisherPulsarDto()->getIterationsLimit() > 0
-            && $this->iterationsNumber > $this->getPublisherPulsarDto()->getIterationsLimit()
+        if ($this->getPublisherPulsarDto()->getTimerIterationsLimit() > 0
+            && $this->timerIterationsNumber > $this->getPublisherPulsarDto()->getTimerIterationsLimit()
         ) {
 
-            $this->iterationsLimitExceeded = true;
+            $this->timerIterationsLimitExceeded = true;
 
             $this->logger->debug($this->getPublisherPulsarDto()->getModuleName() . " will stopped because of increasing"
-                . " of iterations number: " . $this->iterationsNumber . " with limit of "
-                . $this->getPublisherPulsarDto()->getIterationsLimit() . " iterations");
+                . " of iterations number: " . $this->timerIterationsNumber . " with limit of "
+                . $this->getPublisherPulsarDto()->getTimerIterationsLimit() . " iterations");
 
             try {
 
@@ -931,7 +931,7 @@ class Pulsar extends BaseReact implements ReactManager
 
         $this->replyToReplyStack->send(serialize(new PulsarIterationFinish()));
 
-        $this->logger->debug("Pulsar finish iteration with number " . $this->iterationsNumber
+        $this->logger->debug("Pulsar finish whole iteration with timer iteration number " . $this->timerIterationsNumber
             . " and set false/zero values to relevant properties.");
 
         return null;
@@ -980,9 +980,9 @@ class Pulsar extends BaseReact implements ReactManager
     /**
      * @return boolean
      */
-    public function isIterationsLimitExceeded()
+    public function isTimerIterationsLimitExceeded()
     {
-        return $this->iterationsLimitExceeded;
+        return $this->timerIterationsLimitExceeded;
     }
 
 }
