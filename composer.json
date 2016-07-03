@@ -3,7 +3,7 @@
   "description": "ReactPHP and ZMQ based module allowing to coordinate set of independent processes",
     "require": {
       "php": ">=5.5.9",
-      "jamset/react_fractal_basic": "^0",
+      "jamset/react_fractal_basic": "0.2.0",
       "jamset/commands-executor": "^0"
     },
   "require-dev": {
