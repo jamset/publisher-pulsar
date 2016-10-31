@@ -4,6 +4,8 @@ ReactPHP and ZMQ based module allowing to provide independent processes simultan
 I.e. to not exceed API RPS (QPS) limits 
 (i.e. Google Analytics [10 QPS per IP](https://developers.google.com/analytics/devguides/config/mgmt/v3/limits-quotas))
 
+Variant of dynamic token bucket alogorithm.
+
 ##Install
 
 `composer require jamset/publisher-pulsar`
