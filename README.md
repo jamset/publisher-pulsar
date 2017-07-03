@@ -202,37 +202,29 @@ For example:
 
 ```php
 
-if (strpos($e->getMessage(), GaErrorResponsesConstants::USER_RATE_LIMIT_EXCEEDED) !== false) {
+if (isUserRateLimitExceeded()) {
+    $resultWithError = new ActionResultingPushDto();
+    $resultWithError->setActionCompleteCorrectly(false);
+    $resultWithError->setSlowDown(true);
+    $resultWithError->setErrorMessage($e->getMessage());
+    $resultWithError->setErrorReason(GaErrorResponsesConstants::USER_RATE_LIMIT_EXCEEDED);
 
-    $actionResultWithError = new ActionResultingPushDto();
+    $this->zmqPerformer->pushActionResultInfo($resultWithError);
 
-    $actionResultWithError->setActionCompleteCorrectly(false);
-    $actionResultWithError->setSlowDown(true);
+} elseif (isDailyLimitExceeded()) {
 
-    $actionResultWithError->setErrorMessage($e->getMessage());
-    $actionResultWithError->setErrorReason(GaErrorResponsesConstants::USER_RATE_LIMIT_EXCEEDED);
-
-    $this->zmqPerformer->pushActionResultInfo($actionResultWithError);
-
-} elseif (strpos($e->getMessage(), GaErrorResponsesConstants::DAILY_LIMIT_EXCEEDED) !== false) {
-
-    $actionResultWithError = new ActionResultingPushDto();
-
-    $actionResultWithError->setActionCompleteCorrectly(false);
-
+    $resultWithError = new ActionResultingPushDto();
+    $resultWithError->setActionCompleteCorrectly(false);
     $sleepForPeriod = new ErrorSleepForPeriod();
     $sleepForPeriod->setSleepPeriod((60 * 60 * 1000000));
-    $actionResultWithError->setSleepForPeriod($sleepForPeriod);
+    $resultWithError->setSleepForPeriod($sleepForPeriod);
+    $resultWithError->setErrorMessage($e->getMessage());
+    $resultWithError->setErrorReason(GaErrorResponsesConstants::DAILY_LIMIT_EXCEEDED);
 
-    $actionResultWithError->setErrorMessage($e->getMessage());
-    $actionResultWithError->setErrorReason(GaErrorResponsesConstants::DAILY_LIMIT_EXCEEDED);
-
-    $this->zmqPerformer->pushActionResultInfo($actionResultWithError);
+    $this->zmqPerformer->pushActionResultInfo($resultWithError);
 
 } else {
-
     $this->zmqPerformer->pushActionResultInfoWithoutPulsarCorrectionBehavior();
-
 }
 
 
