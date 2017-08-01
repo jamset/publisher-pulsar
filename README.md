@@ -6,7 +6,7 @@ I.e. to not exceed API RPS (QPS) limits
 
 Variant of dynamic token bucket algorithm.
 
-##Install
+## Install
 
 `composer require jamset/publisher-pulsar`
 
@@ -15,7 +15,7 @@ Section "Install PECL" and "Optional".
 
 Note: PHP7 compatible
 
-##Description
+## Description
 
 The idea that PublisherPulsar is the daemon, which allow to make some action simultaneously (i.e. connection to API) 
 for certain number of processes ('subscribers'). 
@@ -33,7 +33,7 @@ make a request to API. And so the limitation of API wouldn't be exceeded.
 
 And of course this module can be used for any purposes that need some simultaneous activity of processes.
 
-###Features:
+### Features:
 
 - If number of processes less than needed to make publishing (i.e. work only 5 processes in some period, or even when 
 no process is running), Pulsar's module called PerformerImitator will imitate activity of missing processes and Pulsar 
@@ -54,15 +54,15 @@ specified period
 - Allow to send arbitrary commands to subscribers by setting class extended from PublisherToSubscribersDto in PublisherPulsarDto
  during initialization. And so one subscriber can contain logic of handling commands from different Pulsars.
 
-##Schema
+## Schema
 
 On the schema described structure and meaning of commands between elements of the module
 
 ![PublisherPulsar schema](https://github.com/jamset/publisher-pulsar/raw/master/images/publisher-pulsar-schema.jpg)
 
-##Example
+## Example
 
-###Daemon settings
+### Daemon settings
 
 Example for Laravel could look like this one. 
 
@@ -152,7 +152,7 @@ And subsidiary ReplyStack daemon command's class have to contain
 
 Note: **very important that daemon have to be started earlier than processes-performers would.**
 
-###Including in process
+### Including in process
 
 Out of the box:
  
@@ -203,25 +203,27 @@ For example:
 ```php
 
 if (isUserRateLimitExceeded()) {
-    $resultWithError = new ActionResultingPushDto();
-    $resultWithError->setActionCompleteCorrectly(false);
-    $resultWithError->setSlowDown(true);
-    $resultWithError->setErrorMessage($e->getMessage());
-    $resultWithError->setErrorReason(GaErrorResponsesConstants::USER_RATE_LIMIT_EXCEEDED);
+    $errorResult = new ActionResultingPushDto();
+    $errorResult->setActionCompleteCorrectly(false);
+    $errorResult->setSlowDown(true);
+    $errorResult->setErrorMessage($e->getMessage());
+    $errorResult->setErrorReason(GaErrorResponsesConstants::USER_RATE_LIMIT_EXCEEDED);
 
-    $this->zmqPerformer->pushActionResultInfo($resultWithError);
+    $this->zmqPerformer->pushActionResultInfo($errorResult);
 
 } elseif (isDailyLimitExceeded()) {
 
-    $resultWithError = new ActionResultingPushDto();
-    $resultWithError->setActionCompleteCorrectly(false);
+    $errorResult = new ActionResultingPushDto();
+    $errorResult->setActionCompleteCorrectly(false);
+    
     $sleepForPeriod = new ErrorSleepForPeriod();
     $sleepForPeriod->setSleepPeriod((60 * 60 * 1000000));
-    $resultWithError->setSleepForPeriod($sleepForPeriod);
-    $resultWithError->setErrorMessage($e->getMessage());
-    $resultWithError->setErrorReason(GaErrorResponsesConstants::DAILY_LIMIT_EXCEEDED);
+    
+    $errorResult->setSleepForPeriod($sleepForPeriod);
+    $errorResult->setErrorMessage($e->getMessage());
+    $errorResult->setErrorReason(GaErrorResponsesConstants::DAILY_LIMIT_EXCEEDED);
 
-    $this->zmqPerformer->pushActionResultInfo($resultWithError);
+    $this->zmqPerformer->pushActionResultInfo($errorResult);
 
 } else {
     $this->zmqPerformer->pushActionResultInfoWithoutPulsarCorrectionBehavior();
