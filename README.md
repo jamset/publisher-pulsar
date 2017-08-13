@@ -1,11 +1,11 @@
 # Publisher Pulsar
-ReactPHP and ZMQ based module allowing to provide simultaneous activity for independent processes. Or in other words to coordinate set of independent processes.
+ReactPHP and ZMQ based module allowing to provide simultaneous, coordinated activity of independent processes and so manage their activity.
 
-In particular case be the implementaion of dynamic [tocken bucket algorithm](https://en.wikipedia.org/wiki/Token_bucket).
+In particular case could be considered as the implementaion of dynamic [tocken bucket algorithm](https://en.wikipedia.org/wiki/Token_bucket).
 
 I.e. to not exceed API RPS (QPS) limits in dynamic mode of activity. 
 
-Note: for static implementation may take a look at [this one](https://github.com/bandwidth-throttle/token-bucket)
+Note: for static implementation may take a look at [this one](https://github.com/bandwidth-throttle/token-bucket).
 
 ## Install
 
