@@ -1,10 +1,11 @@
 # Publisher Pulsar
-ReactPHP and ZMQ based module allowing to provide independent processes simultaneous activity 
-\[, to coordinate set of independent processes\]. 
-I.e. to not exceed API RPS (QPS) limits 
-(i.e. Google Analytics [10 QPS per IP](https://developers.google.com/analytics/devguides/config/mgmt/v3/limits-quotas))
+ReactPHP and ZMQ based module allowing to provide simultaneous activity for independent processes. Or in other words to coordinate set of independent processes.
 
-Variant of dynamic token bucket algorithm.
+In particular case be the implementaion of dynamic [tocken bucket algorithm](https://en.wikipedia.org/wiki/Token_bucket).
+
+I.e. to not exceed API RPS (QPS) limits in dynamic mode of activity. 
+
+Note: for static implementation may take a look at [this one](https://github.com/bandwidth-throttle/token-bucket)
 
 ## Install
 
@@ -13,22 +14,15 @@ Variant of dynamic token bucket algorithm.
 Additional needed libs installation guide could be found [here](https://github.com/jamset/gearman-conveyor/blob/master/docs/environment.md). 
 Section "Install PECL" and "Optional".
 
-Note: PHP7 compatible
-
 ## Description
 
-The idea that PublisherPulsar is the daemon, which allow to make some action simultaneously (i.e. connection to API) 
-for certain number of processes ('subscribers'). 
+The idea that PublisherPulsar is the daemon, which allow to make some action simultaneously for certain number of processes ('subscribers'). 
 
-I.e. limit for Google Analytics is 10 requests (queries) per second, and so you can include in code of such processes ('services',
-that contain Performer class with relevant Pulsar integrated commands) connection to Pulsar, set in Pulsar settings 
-limit for 10 subscribers per iteration, set iteration size 1 second, and start daemon and processes. 
+I.e. limit for Google Analytics is 10 requests (queries) per second, and so you can include in code of such processes ('services', that contain Performer class with relevant Pulsar integrated commands) connection to Pulsar, set in Pulsar settings limit for 10 subscribers per iteration, set iteration size 1 second, and start daemon and processes. 
 
-All processes beginning after it will be connect to special stack (ReplyStack), which will notify Pulsar that subscribers 
-are ready to make an action when all needed number of processes
-will be active (executed and paused on point that need Pulsar permission to execute further.
+All processes beginning after it will be connected to special stack (ReplyStack), which will notify Pulsar that subscribers are ready to make an action when all needed number of processes will be active.
 
-After it Pulsar send allowing message to processes (subscribers), that allow them to continue their execution, i.e. 
+After it Pulsar send allowing message to processes (subscribers), that allows them to continue their execution, i.e. 
 make a request to API. And so the limitation of API wouldn't be exceeded.
 
 And of course this module can be used for any purposes that need some simultaneous activity of processes.
@@ -39,20 +33,13 @@ And of course this module can be used for any purposes that need some simultaneo
 no process is running), Pulsar's module called PerformerImitator will imitate activity of missing processes and Pulsar 
 will work as it should, without any long stops. 
 
-- If error occur Pulsar can decrease number of subscribers or slow down - make usleep() for certain growing period 
-(the default value can be changed during 
-initialization of the daemon in PublisherPulsarDto object), to remove the error messages at incoming resulting Dto from 
-processes. And when error is
- removed Pulsar start gradually return to normal state.
+- If error occur in services responses Pulsar can decrease number of subscribers or slow down - make usleep() for certain growing period (the default value can be changed during initialization of the daemon in PublisherPulsarDto object), to remove the error messages at incoming resulting Dto from processes (services). And when error is removed Pulsar start gradually return to normal state.
  
- It very useful when only part of processes that work with API is connected to Pulsar, and so it works flexibly, 
- adapting to the situation.
+ It very useful when, for example, only part of processes working with API is connected to Pulsar, and so it works flexibly, adapting to the situation.
 
-- If incoming error shows that Pulsar have to be stopped definitely for some period, it detect such signal and make usleep() for the 
-specified period
+- If incoming error shows that Pulsar have to be stopped definitely for some period, it detect such signal and make usleep() for the specified period
 
-- Allow to send arbitrary commands to subscribers by setting class extended from PublisherToSubscribersDto in PublisherPulsarDto
- during initialization. And so one subscriber can contain logic of handling commands from different Pulsars.
+- Allow to send arbitrary commands to subscribers by setting class extended from PublisherToSubscribersDto in PublisherPulsarDto during initialization. And so one subscriber can contain logic of handling commands from different types of customized Pulsars.
 
 ## Schema
 
