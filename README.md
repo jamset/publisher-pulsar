@@ -1,5 +1,5 @@
 # Publisher Pulsar
-ReactPHP and ZMQ based module allowing to provide simultaneous, coordinated actions of independent processes and so manage their activity.
+ReactPHP and ZMQ based module allowing to provide simultaneous, coordinated actions of independent processes and send them extended instructions so manage their activity.
 
 In particular case could be considered as the implementaion of dynamic [tocken bucket algorithm](https://en.wikipedia.org/wiki/Token_bucket).
 
