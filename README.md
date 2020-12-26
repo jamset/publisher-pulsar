@@ -4,7 +4,7 @@
 
 ReactPHP and ZMQ based module allowing to provide simultaneous, coordinated actions of independent processes and send them extended instructions so manage their activity.
 
-In particular case could be considered as the implementaion of dynamic [tocken bucket algorithm](https://en.wikipedia.org/wiki/Token_bucket).
+In particular case could be considered as the implementaion of dynamic [token bucket algorithm](https://en.wikipedia.org/wiki/Token_bucket).
 
 I.e. to not exceed API RPS (QPS) limits in dynamic mode of activity. 
 
