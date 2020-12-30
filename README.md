@@ -60,15 +60,15 @@ Out of the box (among other it's default socket params for one node for Pulsar a
 
 ```php
     
-    use \React\PublisherPulsar\Pulsar;
-    use \React\PublisherPulsar\Inventory\PublisherPulsarDto; 
-    use \React\PublisherPulsar\Inventory\PulsarSocketsParamsDto;
-    use \React\PublisherPulsar\ReplyStack;
-    use \React\PublisherPulsar\Performer;
-    use \React\PublisherPulsar\Inventory\PerformerDto;
-    use \React\PublisherPulsar\Inventory\PerformerSocketsParamsDto;
-    use \React\PublisherPulsar\Inventory\ActionResultingPushDto;
-    use \React\PublisherPulsar\Inventory\ErrorSleepForPeriod;
+    use React\PublisherPulsar\Pulsar;
+    use React\PublisherPulsar\Inventory\PublisherPulsarDto; 
+    use React\PublisherPulsar\Inventory\PulsarSocketsParamsDto;
+    use React\PublisherPulsar\ReplyStack;
+    use React\PublisherPulsar\Performer;
+    use React\PublisherPulsar\Inventory\PerformerDto;
+    use React\PublisherPulsar\Inventory\PerformerSocketsParamsDto;
+    use React\PublisherPulsar\Inventory\ActionResultingPushDto;
+    use React\PublisherPulsar\Inventory\ErrorSleepForPeriod;
     
     /**
      * Execute the console command.
