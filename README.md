@@ -64,8 +64,10 @@ Out of the box (among other it's default socket params for one node for Pulsar a
     use \React\PublisherPulsar\Inventory\PublisherPulsarDto; 
     use \React\PublisherPulsar\Inventory\PulsarSocketsParamsDto;
     use \React\PublisherPulsar\ReplyStack;
-    use \React\PublisherPulsar\Performer();
-    use \React\PublisherPulsar\Inventory\PerformerDto();
+    use \React\PublisherPulsar\Performer;
+    use \React\PublisherPulsar\Inventory\PerformerDto;
+    use \React\PublisherPulsar\Inventory\PerformerSocketsParamsDto;
+    use \React\PublisherPulsar\Inventory\ActionResultingPushDto;
     
     /**
      * Execute the console command.
@@ -138,7 +140,7 @@ And subsidiary ReplyStack daemon command's class have to contain
      */
     public function fire()
     {
-        $replyStack = new  ReplyStack();
+        $replyStack = new ReplyStack();
         $replyStack->startCommunication();
 
         return null;
