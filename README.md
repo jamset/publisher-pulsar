@@ -59,6 +59,14 @@ Example for Laravel could look like this one.
 Out of the box (among other it's default socket params for one node for Pulsar and performers):
 
 ```php
+    
+    use \React\PublisherPulsar\Pulsar;
+    use \React\PublisherPulsar\Inventory\PublisherPulsarDto; 
+    use \React\PublisherPulsar\Inventory\PulsarSocketsParamsDto;
+    use \React\PublisherPulsar\ReplyStack;
+    use \React\PublisherPulsar\Performer();
+    use \React\PublisherPulsar\Inventory\PerformerDto();
+    
     /**
      * Execute the console command.
      *
@@ -70,9 +78,9 @@ Out of the box (among other it's default socket params for one node for Pulsar a
         //You can launch it out of the box if Pulsar and subscribers launching on one node, with default properties 
         //(no less than 1 second for iteration, 10 subscribers)
     
-        $pulsar = new \React\PublisherPulsar\Pulsar();
+        $pulsar = new Pulsar();
         
-        $publisherPulsarDto = new \React\PublisherPulsar\Inventory\PublisherPulsarDto();              
+        $publisherPulsarDto = new PublisherPulsarDto();              
         $publisherPulsarDto->setModuleName('react:pulsar'); //arbitrary name        
         $publisherPulsarDto->setReplyStackCommandName('php artisan react:pulsar-reply-stack'); // address of subsidiary command, its code is presented below
         $publisherPulsarDto->initDefaultPulsarSocketsParams();
@@ -102,7 +110,7 @@ And with additional options:
         $publisherPulsarDto->setPublisherToSubscribersDto($publisherToSubscribersDto);  
         //]      
 
-        $pulsarSocketsParams = new \React\PublisherPulsar\Inventory\PulsarSocketsParamsDto();
+        $pulsarSocketsParams = new PulsarSocketsParamsDto();
 
         //it could be any free ports
         $pulsarSocketsParams->setReplyToReplyStackSocketAddress('tcp://127.0.0.1:6271');
@@ -130,7 +138,7 @@ And subsidiary ReplyStack daemon command's class have to contain
      */
     public function fire()
     {
-        $replyStack = new  \React\PublisherPulsar\ReplyStack();
+        $replyStack = new  ReplyStack();
         $replyStack->startCommunication();
 
         return null;
@@ -148,9 +156,9 @@ Out of the box:
  
 ```php
   
-$performer = new \React\PublisherPulsar\Performer();
+$performer = new Performer();
  
-$performerDto = new \React\PublisherPulsar\Inventory\PerformerDto();
+$performerDto = new PerformerDto();
 $performerDto->setModuleName("YourServiceNameContainingPerformer");
 
 $performer->setPerformerDto($performerDto);
@@ -165,7 +173,7 @@ And with options:
 
 $performerDto->setLogger(\Log::getMonolog()); 
  
-$performerSocketParams = new \React\PublisherPulsar\Inventory\PerformerSocketsParamsDto();
+$performerSocketParams = new PerformerSocketsParamsDto();
 //this addresses is the same with addresses of relevant Pulsar's properties as ZMQ-pair (Publish/Subscribe, Push/Pull, Request/Reply)
 $performerSocketParams->setPublisherPulsarSocketAddress('tcp://127.0.0.1:6273');
 $performerSocketParams->setPushPulsarSocketAddress('tcp://127.0.0.1:6274');
